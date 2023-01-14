@@ -137,4 +137,3 @@ const Typography = (props: ITypographyProps) => {
 
 
 export default WithPadding(Typography);
-// export default compose(WithPadding)(Typography)
