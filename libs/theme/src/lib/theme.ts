@@ -17,6 +17,9 @@ export const theme = [
     shape: {
       borderRadius: 4,
     },
+    border: {
+      default: 3
+    },
     shadows: shadow,
     typography: {
       ...typography,

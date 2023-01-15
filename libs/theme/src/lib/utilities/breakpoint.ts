@@ -3,7 +3,7 @@ import { theme } from '../theme';
 import { WithBreakpoint } from '../types/cssProperties';
 import type * as CSS from 'csstype';
 
-type ExtractGeneric<Type> = Type extends WithBreakpoint<infer X> ? X : Type;
+type ExtractGeneric<T> = T extends WithBreakpoint<infer X> ? X : T;
 
 export const handleBreakpoints = <T>(
   breakpointProp: WithBreakpoint<T> | T,

@@ -1,9 +1,12 @@
 import styled from '@emotion/styled';
-import { Spacing, WithBreakpoint } from '@trade-invest/theme';
 import type * as CSS from 'csstype';
-import WithPadding from 'libs/theme/src/lib/hoc/Spacing';
-import React, { ComponentType, HTMLAttributes } from 'react';
-import { compose } from 'recompose';
+import React, { HTMLAttributes } from 'react';
+import {
+  withBorder,
+  withMargin,
+  withPadding,
+} from '../higher-order-components';
+import { compose } from '../utilities';
 
 type VariantType =
   | 'body1'
@@ -135,5 +138,4 @@ const Typography = (props: ITypographyProps) => {
   );
 };
 
-
-export default WithPadding(Typography);
+export default compose(withPadding, withMargin, withBorder)(Typography);

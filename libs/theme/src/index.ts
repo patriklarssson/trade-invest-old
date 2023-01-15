@@ -9,4 +9,3 @@ export { Shadow } from './lib/shadows/shadows';
 export { IntRange } from './lib/types/range';
 export * from './lib/types/cssProperties';
 export { handleBreakpoints } from './lib/utilities/breakpoint';
-export * from "./lib/hoc/Spacing"
