@@ -11,7 +11,11 @@ export default {
 } as ComponentMeta<typeof Typography>;
 
 const Template: ComponentStory<typeof Typography> = (args) => {
-  return <Typography border  m={5} {...args}>{args.children}</Typography>;
+  return (
+    <Typography hidden display="block" border boxShadow={5} m={5} {...args}>
+      {args.children}
+    </Typography>
+  );
 };
 
 export const Component = Template.bind({});
@@ -40,7 +44,7 @@ export const Variants = () => (
     <Typography gutterBottom variant="h6">
       h6. Heading
     </Typography>
-    <Typography gutterBottom variant="subtitle1" >
+    <Typography gutterBottom variant="subtitle1">
       subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
       blanditiis tenetur
     </Typography>
@@ -102,5 +106,3 @@ NoWrap.parameters = {
       '`noWrap` Text cannot wrap itself in a newline. `subtitles` will always have `noWrap` set to true',
   },
 };
-
-

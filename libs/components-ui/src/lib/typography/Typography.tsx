@@ -3,6 +3,8 @@ import type * as CSS from 'csstype';
 import React, { HTMLAttributes } from 'react';
 import {
   withBorder,
+  withBoxShadow,
+  withDisplay,
   withMargin,
   withPadding,
 } from '../higher-order-components';
@@ -138,4 +140,4 @@ const Typography = (props: ITypographyProps) => {
   );
 };
 
-export default compose(withPadding, withMargin, withBorder)(Typography);
+export default compose(withPadding, withMargin, withBorder, withBoxShadow, withDisplay)(Typography);
