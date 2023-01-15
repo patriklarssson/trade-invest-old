@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof Typography>;
 
 const Template: ComponentStory<typeof Typography> = (args) => {
-  return <Typography border borderColor='green' m={5} {...args}>{args.children}</Typography>;
+  return <Typography border  m={5} {...args}>{args.children}</Typography>;
 };
 
 export const Component = Template.bind({});

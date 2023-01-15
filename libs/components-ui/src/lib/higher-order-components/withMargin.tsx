@@ -7,12 +7,33 @@ import {
 import { ComponentType } from 'react';
 
 interface IMarginProps {
+  /**
+   * Margin property. Can be an object with breakpoints.
+   */
   m: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Margin Top property. Can be an object with breakpoints.
+   */
   mt: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Margin Right property. Can be an object with breakpoints.
+   */
   mr: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Margin Bottom property. Can be an object with breakpoints.
+   */
   mb: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Margin Left property. Can be an object with breakpoints.
+   */
   ml: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Margin Right and Left property. Can be an object with breakpoints.
+   */
   mx: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Margin Top and Bottom property. Can be an object with breakpoints.
+   */
   my: Spacing | WithBreakpoint<Spacing>;
 }
 

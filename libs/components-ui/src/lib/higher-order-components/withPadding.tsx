@@ -7,12 +7,33 @@ import {
 import { ComponentType } from 'react';
 
 interface IPaddingProps {
+  /**
+   * Padding property. Can be an object with breakpoints.
+   */
   p: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Padding Top property. Can be an object with breakpoints.
+   */
   pt: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Padding Right property. Can be an object with breakpoints.
+   */
   pr: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Padding Bottom property. Can be an object with breakpoints.
+   */
   pb: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Padding Left property. Can be an object with breakpoints.
+   */
   pl: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Padding Right and Left property. Can be an object with breakpoints.
+   */
   px: Spacing | WithBreakpoint<Spacing>;
+  /**
+   * Padding Top and Bottom property. Can be an object with breakpoints.
+   */
   py: Spacing | WithBreakpoint<Spacing>;
 }
 
