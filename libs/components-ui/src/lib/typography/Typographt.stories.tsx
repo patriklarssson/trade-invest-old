@@ -12,7 +12,7 @@ export default {
 
 const Template: ComponentStory<typeof Typography> = (args) => {
   return (
-    <Typography hidden display="block" border boxShadow={5} m={5} {...args}>
+    <Typography style={{height: 800}} alignItems="center" display="flex" border boxShadow={5} m={5} {...args}>
       {args.children}
     </Typography>
   );
