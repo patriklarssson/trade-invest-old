@@ -17,7 +17,7 @@ interface IBoxShadowProps {
 const withBoxShadow = <T,>(WrappedComponent: ComponentType<T>) => {
   const BoxShadowHoc = styled(WrappedComponent)<Partial<IBoxShadowProps> & T>(
     ({ theme, boxShadow }) => ({
-      ...(boxShadow && {
+      ...((boxShadow || boxShadow === 0) && {
         boxShadow: theme.shadows(boxShadow),
       }),
     })

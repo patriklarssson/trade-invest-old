@@ -6,9 +6,10 @@ import type * as CSS from 'csstype';
 type ExtractGeneric<T> = T extends WithBreakpoint<infer X> ? X : T;
 
 export const handleBreakpoints = <T>(
-  breakpointProp: WithBreakpoint<T> | T,
+  breakpointProp: WithBreakpoint<T> | T | undefined,
   propValue: (prop: ExtractGeneric<T> | T) => CSS.Properties
 ) => {
+  // if(breakpointProp === undefined) return undefined
   if (!isWithBreakpoints(breakpointProp)) return propValue(breakpointProp);
 
   const { breakpoint } = theme[0];
