@@ -19,7 +19,7 @@ Component.args = {
   variant: 'h1',
   children: 'Typography',
   borderTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
-  borderRight: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
+  borderRight: { xs: 1, xl: 5 },
   borderLeft: 5,
   borderBottom: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
 };
