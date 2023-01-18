@@ -75,13 +75,21 @@ const withBorder = <T,>(WrappedComponent: ComponentType<T>) => {
             borderRight: `${borderRight}px solid`,
             borderBottom: `${borderBottom}px solid`,
             borderLeft: `${borderLeft}px solid`,
-            ...(borderTop === undefined && { borderTop: undefined }),
-            ...(borderRight === undefined && { borderRight: undefined }),
-            ...(borderBottom === undefined && { borderBottom: undefined }),
-            ...(borderLeft === undefined && { borderLeft: undefined }),
+            // ...(borderTop === undefined && { borderTop: undefined }),
+            // ...(borderRight === undefined && { borderRight: undefined }),
+            // ...(borderBottom === undefined && { borderBottom: undefined }),
+            // ...(borderLeft === undefined && { borderLeft: undefined }),
           })
         ),
       }),
+
+      ...handleBreakpoints('red', (x) => ({
+        backgroundColor: x,
+      })),
+
+      ...handleBreakpoints(50, (x) => ({
+        borderRadius: x + 'px',
+      })),
     })
   );
   return (props: T & Partial<IBorderProps>) => {

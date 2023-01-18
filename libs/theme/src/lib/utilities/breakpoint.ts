@@ -5,26 +5,32 @@ import type * as CSS from 'csstype';
 
 type ExtractGeneric<Type> = Type extends WithBreakpoint<infer X> ? X : Type;
 
-const getRegularStyles = (breakpointProp: any) => {
-  return Object.entries(breakpointProp).reduce((acc, [key, value]) => {
-    if (typeof value !== 'object') {
-      acc[key] = value;
-    }
-    return acc;
-  }, {});
+const getRegularStyles = <T>(styleProps: WithBreakpoint<T> | T) => {
+  if (styleProps && typeof styleProps === 'object') {
+    const regularStyles = Object.entries(styleProps).filter(
+      ([_, value]) => !isWithBreakpoints(value)
+    );
+    return regularStyles.reduce((acc, [cssProperty, value]) => {
+      acc[cssProperty as keyof T] = value;
+      return acc;
+    }, {} as { [P in keyof T]: T[P] });
+  }
+  return {};
 };
 
-const getStylesWithBreakpoints = <T>(styleProps: WithBreakpoint<T>) => {
+const getStylesWithBreakpoints = <T>(styleProps: WithBreakpoint<T> | T) => {
+  if (styleProps && typeof styleProps === 'object')
     return (styleProps = Object.entries(styleProps)
-      .reduce((acc, [prop, breakpoints]) => {
+      .filter(([_, value]) => isWithBreakpoints(value))
+      .reduce((acc, [cssProperty, breakpoints]) => {
         Object.entries(breakpoints).forEach(([breakpoint, value]) => {
-          acc[breakpoint] = {
-            ...acc[breakpoint],
-            [prop]: value,
+          acc[breakpoint as keyof T] = {
+            ...acc[breakpoint as keyof T],
+            [cssProperty]: value,
           };
         });
         return acc;
-      }, {}));
+      }, {} as { [P in keyof T]: T[P] }));
 };
 
 export const handleBreakpoints = <T>(
@@ -33,22 +39,39 @@ export const handleBreakpoints = <T>(
 ) => {
   const { breakpoint } = theme[0];
 
+  if (typeof styleProps !== 'object') return callbackStyleValue(styleProps);
+
   const regularStyles = getRegularStyles(styleProps);
   const breakpointStyles = getStylesWithBreakpoints(styleProps);
 
-  const breakpointCSS = Object.entries(breakpointStyles).reduce(
+
+  // TODO fix type on breakpoint props
+  const breakpointCSS = Object.entries(breakpointStyles ?? {}).reduce(
     (acc, [bp, value]) => {
-      acc[breakpoint.up(bp as BreakpointKey)] = callbackStyleValue(value);
+      acc[breakpoint.up(bp as BreakpointKey)] = callbackStyleValue(
+        value as ExtractGeneric<T>
+      );
       return acc;
     },
-    {}
+    {} as { [key: string]: unknown }
   );
 
+  // type BreakpointCSS = Record<BreakpointKey, CSS.Properties>;
+
+  // const breakpointCSS: BreakpointCSS = Object.entries(
+  //   breakpointStyles ?? {}
+  // ).reduce((acc, [bp, value]) => {
+  //   acc[breakpoint.up(bp)] = callbackStyleValue(
+  //     value as ExtractGeneric<T>
+  //   );
+  //   return acc;
+  // }, {} as BreakpointCSS);
+
   const css = Object.fromEntries(
-    Object.entries(callbackStyleValue(regularStyles)).filter(
+    Object.entries(callbackStyleValue(regularStyles as T)).filter(
       ([_, value]) => value != null
     )
-  );
+  )
 
   return Object.assign({}, css, breakpointCSS);
 };
@@ -59,94 +82,3 @@ function isWithBreakpoints<T>(
   const { xs, sm, md, lg, xl } = styled as WithBreakpoint<T>;
   return Boolean(xs || sm || md || lg || xl);
 }
-
-// import { BreakpointKey } from '../breakpoint/mediaQueries';
-// import { theme } from '../theme';
-// import { WithBreakpoint } from '../types/cssProperties';
-// import type * as CSS from 'csstype';
-
-// type ExtractGeneric<T> = T extends WithBreakpoint<infer X> ? X : T;
-
-// // export const handleBreakpoints = <T>(
-// //   breakpointProp: WithBreakpoint<T> | T,
-// //   propValue: (prop: ExtractGeneric<T> | T) => CSS.Properties
-// // ) => {
-
-// //   if (!isWithBreakpoints(breakpointProp)) return propValue(breakpointProp);
-
-// //   const { breakpoint } = theme[0];
-
-// //   const stylePerBreakpoint = Object.entries(breakpointProp).map(
-// //     ([bp, value]) => {
-// //       return {
-// //         [breakpoint.up(bp as BreakpointKey)]: {
-// //           ...propValue(value),
-// //         },
-// //       };
-// //     }
-// //   );
-
-// //   return Object.assign({}, ...stylePerBreakpoint);
-// // };
-
-// const getRegularStyles = (breakpointProp: any) => {
-//   return Object.entries(breakpointProp).reduce((acc, [key, value]) => {
-//     if (typeof value !== 'object') {
-//       acc[key] = value;
-//     }
-//     return acc;
-//   }, {});
-// };
-
-// const getStylesWithBreakpoints = (breakpointProp: any) => {
-//   if (!isWithBreakpoints(breakpointProp) && typeof breakpointProp === 'object')
-//     return (breakpointProp = Object.entries(breakpointProp)
-//       .filter(([key, value]) => value !== undefined)
-//       .reduce((acc, [prop, breakpoints]) => {
-//         Object.entries(breakpoints).forEach(([breakpoint, value]) => {
-//           acc[breakpoint] = {
-//             ...acc[breakpoint],
-//             [prop]: value,
-//           };
-//         });
-//         return acc;
-//       }, {}));
-// };
-
-// export const handleBreakpoints = <T>(
-//   breakpointProp: WithBreakpoint<T> | T,
-//   propValue: (prop: ExtractGeneric<T> | T) => CSS.Properties
-// ) => {
-//   console.log('input', breakpointProp);
-
-//   const regularStyles = getRegularStyles(breakpointProp);
-//   const breakpointStyles = getStylesWithBreakpoints(breakpointProp)
-
-//   console.log('regularStyles', regularStyles);
-//   console.log('breakpointStyles', breakpointStyles);
-
-//   const { breakpoint } = theme[0];
-
-//   if (isWithBreakpoints(breakpointStyles)) {
-//     const { breakpoint } = theme[0];
-//     const stylePerBreakpoint = Object.entries(output).map(
-//       ([bp, value]) => {
-//         return {
-//           [breakpoint.up(bp as BreakpointKey)]: {
-//             ...propValue(value),
-//           },
-//         };
-//       }
-//     );
-
-//     return Object.assign({}, ...stylePerBreakpoint)
-//   }
-
-// };
-
-// function isWithBreakpoints<T>(
-//   styled: WithBreakpoint<T> | T
-// ): styled is WithBreakpoint<T> {
-//   const { xs, sm, md, lg, xl } = styled as WithBreakpoint<T>;
-//   return Boolean(xs || sm || md || lg || xl);
-// }
