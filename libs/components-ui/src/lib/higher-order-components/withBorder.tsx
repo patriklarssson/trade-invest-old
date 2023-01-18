@@ -69,20 +69,18 @@ const withBorder = <T,>(WrappedComponent: ComponentType<T>) => {
     }) => ({
       ...(borderTop && {
         ...handleBreakpoints(
-           {borderTop, borderRight, borderBottom, borderLeft} ,
-          ({borderTop, borderRight, borderBottom, borderLeft}) => ({
+          { borderTop, borderRight, borderBottom, borderLeft },
+          ({ borderTop, borderRight, borderBottom, borderLeft }) => ({
             borderTop: `${borderTop}px solid`,
             borderRight: `${borderRight}px solid`,
             borderBottom: `${borderBottom}px solid`,
             borderLeft: `${borderLeft}px solid`,
+            ...(borderTop === undefined && { borderTop: undefined }),
+            ...(borderRight === undefined && { borderRight: undefined }),
+            ...(borderBottom === undefined && { borderBottom: undefined }),
+            ...(borderLeft === undefined && { borderLeft: undefined }),
           })
         ),
-      }),
-
-      ...(borderBottom && {
-        ...handleBreakpoints(borderBottom, (propValue) => ({
-          borderBottom: `${propValue}px solid`,
-        })),
       }),
     })
   );

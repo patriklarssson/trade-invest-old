@@ -20,7 +20,7 @@ Component.args = {
   children: 'Typography',
   borderTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
   borderRight: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
-  borderLeft: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
+  borderLeft: 5,
   borderBottom: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
 };
 
