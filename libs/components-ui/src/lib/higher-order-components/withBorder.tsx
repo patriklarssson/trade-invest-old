@@ -66,31 +66,57 @@ const withBorder = <T,>(WrappedComponent: ComponentType<T>) => {
       borderStyle,
       borderRadius,
       borderColor = theme.palette.common.black,
-    }) => ({
-      ...(borderTop && {
+    }) => {
+      return {
+        // ...(borderTop && {
+        //   ...handleBreakpoints(
+        //     theme,
+        //     { borderTop, borderRight, borderBottom, borderLeft },
+        //     ({ borderTop, borderRight, borderBottom, borderLeft }) => ({
+        //       borderTop: `${borderTop}px solid`,
+        //       borderRight: `${borderRight}px solid`,
+        //       borderBottom: `${borderBottom}px solid`,
+        //       borderLeft: `${borderLeft}px solid`,
+        //       // ...(borderTop === undefined && { borderTop: undefined }),
+        //       // ...(borderRight === undefined && { borderRight: undefined }),
+        //       // ...(borderBottom === undefined && { borderBottom: undefined }),
+        //       // ...(borderLeft === undefined && { borderLeft: undefined }),
+        //     })
+        //   ),
+        // }),
+
         ...handleBreakpoints(
-          { borderTop, borderRight, borderBottom, borderLeft },
-          ({ borderTop, borderRight, borderBottom, borderLeft }) => ({
-            borderTop: `${borderTop}px solid`,
-            borderRight: `${borderRight}px solid`,
-            borderBottom: `${borderBottom}px solid`,
-            borderLeft: `${borderLeft}px solid`,
-            // ...(borderTop === undefined && { borderTop: undefined }),
-            // ...(borderRight === undefined && { borderRight: undefined }),
-            // ...(borderBottom === undefined && { borderBottom: undefined }),
-            // ...(borderLeft === undefined && { borderLeft: undefined }),
+          theme,
+          {
+            accentColor: "red",
+            fontFamily: {md: "qwe"}
+          },
+          ({ a }) => ({
+
           })
         ),
-      }),
 
-      ...handleBreakpoints('red', (x) => ({
-        backgroundColor: x,
-      })),
-
-      ...handleBreakpoints(50, (x) => ({
-        borderRadius: x + 'px',
-      })),
-    })
+        ...handleBreakpoints(
+          theme,
+          {
+            border: {
+              xs: 'undefinedpx solid',
+              sm: '2px solid',
+              md: 'undefinedpx dotted',
+              lg: undefined,
+              xl: '5px dotted',
+            },
+            color: undefined,
+            fontSize: 'undefinedpx',
+            padding: '10px',
+            margin: undefined,
+          },
+          ({ border, color, fontSize, padding, margin }) => ({
+            border, color, fontSize, padding, margin, borderRadius: "20px"
+          })
+        ),
+      };
+    }
   );
   return (props: T & Partial<IBorderProps>) => {
     return <BorderHoc {...props} />;
