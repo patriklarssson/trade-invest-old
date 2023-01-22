@@ -1,46 +1,34 @@
 import { BreakpointKey } from '../breakpoint/mediaQueries';
-import { theme } from '../theme';
 import { WithBreakpoint } from '../types/cssProperties';
 import type * as CSS from 'csstype';
-import { Theme, useTheme } from '@emotion/react';
+import { Theme } from '@emotion/react';
 
+/**
+ * Extracts the type T from WithBreakpoint<T>
+ */
 type ExtractFromBreakpoint<T> = T extends WithBreakpoint<infer X> ? X : T;
+/**
+ * Extracts the type T from an object of type { [P in keyof T]: T }
+ */
 type ExtractGenericObject<T> = { [P in keyof T]: ExtractFromBreakpoint<T[P]> };
-
-const seperateStyles = <T>(styleProps: WithBreakpoint<T> | T) => {
-  if (!styleProps || typeof styleProps !== 'object') {
-    return {
-      breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
-      regularStyles: {} as ExtractGenericObject<T>,
-    };
-  }
-  return Object.entries(styleProps).reduce(
-    (acc, [key, value]) => {
-      if (isWithBreakpoints(value)) {
-        Object.entries(value).forEach(([breakpoint, val]) => {
-          acc.breakpointStyles[breakpoint] = {
-            ...acc.breakpointStyles[breakpoint],
-            [key]: val,
-          };
-        });
-      } else {
-        acc.regularStyles = { ...acc.regularStyles, [key]: value };
-      }
-      return acc;
-    },
-    {
-      breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
-      regularStyles: {} as ExtractGenericObject<T>,
-    }
-  );
+/**
+ * Type that represents CSS properties along with a responsive design pattern using `WithBreakpoint<T>`
+ */
+type StyledProperties = {
+  [P in keyof CSS.Properties]:
+    | WithBreakpoint<CSS.Properties[P]>
+    | CSS.Properties[P];
 };
 
-type Test<T> = { [P in keyof CSS.Properties]: T };
-
+/**
+ * @param theme The theme object containing breakpoint information
+ * @param styleProps An object of type `StyledProperties` or `T`
+ * @param callbackStyleValue A callback function that takes in a `T` and returns a `CSS.Properties`
+ * @returns A filtered object of type `CSS.Properties`
+ */
 export const handleBreakpoints = <T>(
   theme: Theme,
-  styleProps: Test<WithBreakpoint<T> | T> | T,
-  // styleProps: WithBreakpoint<T> | T,
+  styleProps: StyledProperties | T,
   callbackStyleValue: (prop: ExtractGenericObject<T>) => CSS.Properties
 ) => {
   if (typeof styleProps !== 'object')
@@ -79,7 +67,43 @@ export const handleBreakpoints = <T>(
     )
   );
 
-  return filteredObject;
+
+  console.log(filteredObject);
+
+
+  return filteredObject as {[key: string]: any};
+};
+
+/**
+ * @param styleProps An object of type `WithBreakpoint<T>` or `T`
+ * @returns An object containing two fields `breakpointStyles` and `regularStyles`
+ */
+const seperateStyles = <T>(styleProps: WithBreakpoint<T> | T) => {
+  if (!styleProps || typeof styleProps !== 'object') {
+    return {
+      breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
+      regularStyles: {} as ExtractGenericObject<T>,
+    };
+  }
+  return Object.entries(styleProps).reduce(
+    (acc, [key, value]) => {
+      if (isWithBreakpoints(value)) {
+        Object.entries(value).forEach(([breakpoint, val]) => {
+          acc.breakpointStyles[breakpoint] = {
+            ...acc.breakpointStyles[breakpoint],
+            [key]: val,
+          };
+        });
+      } else {
+        acc.regularStyles = { ...acc.regularStyles, [key]: value };
+      }
+      return acc;
+    },
+    {
+      breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
+      regularStyles: {} as ExtractGenericObject<T>,
+    }
+  );
 };
 
 function isWithBreakpoints<T>(

@@ -21,6 +21,7 @@ Component.args = {
   borderTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
   borderRight: { xs: 1, xl: 5 },
   borderLeft: 5,
+  borderRadius: {xs: "50%", sm: 10, md: "90%", lg: "20%"},
   borderBottom: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
 };
 
