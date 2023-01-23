@@ -31,6 +31,9 @@ export const handleBreakpoints = <T>(
   styleProps: StyledProperties | T,
   callbackStyleValue: (prop: ExtractGenericObject<T>) => CSS.Properties
 ) => {
+  console.log('styleProps', styleProps);
+  console.log('callbackStyleValue(styleProps)', callbackStyleValue(styleProps));
+
   if (typeof styleProps !== 'object')
     return callbackStyleValue(styleProps as ExtractGenericObject<T>);
 
@@ -67,11 +70,9 @@ export const handleBreakpoints = <T>(
     )
   );
 
-
   console.log(filteredObject);
 
-
-  return filteredObject as {[key: string]: any};
+  return filteredObject as { [key: string]: any };
 };
 
 /**

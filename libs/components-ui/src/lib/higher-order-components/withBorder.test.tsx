@@ -5,13 +5,17 @@ import withBorder from './withBorder';
 import { ThemeProvider } from '@emotion/react';
 expect.extend(matchers);
 
+const bp = {
+  xs: 0,
+  sm: 600,
+  md: 900,
+  lg: 1200,
+  xl: 1536,
+};
+
 const mockTheme: any = {
   breakpoint: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
+    up: (value: keyof typeof bp) => `@media (min-width:${bp[value]}px)`,
   },
   palette: {
     common: {
@@ -26,7 +30,7 @@ const mockTheme: any = {
   },
 };
 
-const breakpointKeys = Object.keys(mockTheme.breakpoint);
+const breakpointKeys = Object.keys(bp);
 
 describe('withBorder', () => {
   const TestComponent = styled.div();
@@ -68,7 +72,7 @@ describe('withBorder', () => {
     const tree = renderer
       .create(
         <ThemeProvider theme={mockTheme}>
-          <WrappedComponent borderRadius={10} />
+          <WrappedComponent border borderRadius={10} />
         </ThemeProvider>
       )
       .toJSON();
@@ -81,7 +85,7 @@ describe('withBorder', () => {
     const tree = renderer
       .create(
         <ThemeProvider theme={mockTheme}>
-          <WrappedComponent borderRadius="50%" />
+          <WrappedComponent border borderRadius="50%" />
         </ThemeProvider>
       )
       .toJSON();
@@ -95,7 +99,10 @@ describe('withBorder', () => {
         </ThemeProvider>
       )
       .toJSON();
-    expect(tree).toHaveStyleRule('border-style', 'dotted');
+    expect(tree).toHaveStyleRule(
+      'border',
+      `${mockTheme.border.default}px dotted`
+    );
   });
   test('should add induvidual borders to the wrapped component', () => {
     const tree = renderer
@@ -131,16 +138,16 @@ describe('withBorder', () => {
 
     breakpointKeys.forEach((bp, index) => {
       expect(tree).toHaveStyleRule('border-top', `${index + 1}px solid`, {
-        media: `(min-width: ${mockTheme.breakpoint[bp]}px)`,
+        media: mockTheme.breakpoint.up(bp),
       });
       expect(tree).toHaveStyleRule('border-right', `${index + 1}px solid`, {
-        media: `(min-width: ${mockTheme.breakpoint[bp]}px)`,
+        media: mockTheme.breakpoint.up(bp),
       });
       expect(tree).toHaveStyleRule('border-bottom', `${index + 1}px solid`, {
-        media: `(min-width: ${mockTheme.breakpoint[bp]}px)`,
+        media: mockTheme.breakpoint.up(bp),
       });
       expect(tree).toHaveStyleRule('border-left', `${index + 1}px solid`, {
-        media: `(min-width: ${mockTheme.breakpoint[bp]}px)`,
+        media: mockTheme.breakpoint.up(bp),
       });
     });
   });

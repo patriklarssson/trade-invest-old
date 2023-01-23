@@ -31,17 +31,15 @@ interface IBorderProps {
   borderLeft: number | WithBreakpoint<number>;
 
   /**
-   * The border style. Can be an object with breakpoints.
-   */
-  borderStyle:
-    | CSS.Property.BorderStyle
-    | WithBreakpoint<CSS.Property.BorderStyle>;
-
-  /**
    * The border radius. Can be a number, a string or an object with breakpoints.
    * When set as a number, it will be multiplied by the default border radius from the theme.
    */
   borderRadius: number | string | WithBreakpoint<number | string>;
+
+  /**
+   * The border style. Can be an object with breakpoints.
+   */
+  borderStyle: CSS.Property.BorderStyle;
 
   /**
    * The border color.
@@ -63,59 +61,49 @@ const withBorder = <T,>(WrappedComponent: ComponentType<T>) => {
       borderRight,
       borderBottom,
       borderLeft,
-      borderStyle,
       borderRadius,
+      borderStyle = 'solid',
       borderColor = theme.palette.common.black,
-    }) => ({
-      ...handleBreakpoints(
-        theme,
-        {
-          border,
-          borderTop,
-          borderRight,
-          borderBottom,
-          borderLeft,
-          borderStyle,
-          borderRadius,
-          borderColor,
-        },
-        ({
-          border,
-          borderTop,
-          borderRight,
-          borderBottom,
-          borderLeft,
-          borderStyle,
-          borderRadius,
-          borderColor,
-        }) => {
-          const styles: any = {
-            border: border,
-            borderStyle: borderStyle,
-            borderRadius: borderRadius,
-            borderColor: borderColor,
-            borderTop: `${borderTop}px solid`,
-            borderRight: `${borderRight}px solid`,
-            borderBottom: `${borderBottom}px solid`,
-            borderLeft: `${borderLeft}px solid`,
-          };
+    }) => {
+      if (border || borderTop || borderRight || borderBottom || borderLeft)
+        return {
+          ...handleBreakpoints(
+            theme,
+            {
+              border,
+              borderTop,
+              borderRight,
+              borderBottom,
+              borderLeft,
+              borderRadius,
+            },
+            ({
+              border,
+              borderTop,
+              borderRight,
+              borderBottom,
+              borderLeft,
+              borderRadius,
+            }) => {
+              if (typeof border === 'boolean') border = theme.border.default;
 
-          if (border) {
-            if (typeof border === 'boolean')
-              styles.border = `${theme.border.default}px solid`;
-            else styles.border = `${border}px solid`;
-          }
+              if (typeof borderRadius === 'number')
+                borderRadius = `${theme.shape.borderRadius * borderRadius}px`;
 
-          if (borderRadius) {
-            if (typeof borderRadius === 'number')
-              styles.borderRadius = `${theme.shape.borderRadius * borderRadius}px`;
-            else styles.borderRadius = borderRadius
-          }
-
-          return styles;
-        }
-      ),
-    })
+              return {
+                border: `${border}px ${borderStyle}`,
+                borderTop: `${borderTop}px ${borderStyle}`,
+                borderRight: `${borderRight}px ${borderStyle}`,
+                borderBottom: `${borderBottom}px ${borderStyle}`,
+                borderLeft: `${borderLeft}px ${borderStyle}`,
+                borderRadius,
+                borderColor,
+              };
+            }
+          ),
+        };
+      return {};
+    }
   );
   return (props: T & Partial<IBorderProps>) => {
     return <BorderHoc {...props} />;
