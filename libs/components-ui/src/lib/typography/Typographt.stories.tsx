@@ -18,8 +18,8 @@ export const Component = Template.bind({});
 Component.args = {
   variant: 'h1',
   children: 'Typography',
-  borderTop: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1 },
-  borderRight: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1 },
+  borderTop: { xs: 1, xl: 1 },
+  borderRight: { xs: 1, md: 1, lg: 1, xl: 1 },
   borderBottom: 1,
   borderLeft: 1,
 };
