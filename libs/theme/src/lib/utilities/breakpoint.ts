@@ -1,7 +1,20 @@
-import { BreakpointKey } from '../breakpoint/mediaQueries';
-import { WithBreakpoint } from '../types/cssProperties';
+import { Breakpoint, BreakpointKey } from '../breakpoint/mediaQueries';
 import type * as CSS from 'csstype';
 import { Theme } from '@emotion/react';
+
+/**
+WithBreakpoint is a generic type that takes in another type T and creates an object that maps keys to values of type T for each breakpoint.
+The keys of the object are the breakpoint names, and the values are of type T.
+This allows for easy definition of styles or other properties that are specific to certain breakpoints.
+@example
+type MyStyles = { color: string };
+const myStyles: WithBreakpoint<MyStyles> = {
+xs: { color: 'red' },
+sm: { color: 'blue' },
+};
+@template T The type of the values that the object maps to
+*/
+export type WithBreakpoint<T> = { [breakpoint in keyof Breakpoint]?: T };
 
 /**
  * `ExtractFromBreakpoint<T>` is a utility type that, given a type `T`, returns the type of the value
@@ -82,30 +95,30 @@ type JssStyle =
   | (StyledMediaQuery & CSS.Properties);
 
 /**
-*`handleBreakpoints` is a utility function that takes in a `theme`, `styleProps`, and a `callbackStyleValue` function.
-*It returns a `JssStyle` object that contains the resulting styles from the `callbackStyleValue` function.
-*@param {Theme} theme The theme object that contains breakpoint information.
-*@param {StyledProperties | T} styleProps A StyledProperties object that contains the styles to be mapped,
-*or a generic object T that will be passed to the callbackStyleValue function.
-*@param {(prop: ExtractGenericObject<T>) => CSS.Properties} callbackStyleValue A callback function that takes in an
-*ExtractGenericObject<T> object and returns the resulting CSS.Properties object.
-*@returns {JssStyle} A JssStyle object that contains the resulting styles from the callbackStyleValue function.
-* @example
-*   // Will result in {backgroundColor: "red"} style being added to the component
-*   const Component = styled.div(({theme}) => ({
-*    ...handleBreakpoints(theme, "red", (color) => ({backgroundColor: color}))
-*  }))
-* @example
-*  // Will result in {display: "flex", flexDirection: 'column'} styles being added to the component
-*  const Component = styled.div(({theme}) => ({
-*    ...handleBreakpoints(theme, {display: "flex", flexDirection: 'column'}, ({display, flexDirection}) => ({display, flexDirection}))
-*  }))
-* @example
-* // Will result in {backgroundColor: "red"} for Mediaquery md and up, end then switch to blue for lg and up
-*   const Component = styled.div(({theme}) => ({
-*    ...handleBreakpoints(theme, {backgroundColor: {md: "red", lg: "blue"}}, ({backgroundColor}) => ({backgroundColor}))
-*  }))
-*/
+ *`handleBreakpoints` is a utility function that takes in a `theme`, `styleProps`, and a `callbackStyleValue` function.
+ *It returns a `JssStyle` object that contains the resulting styles from the `callbackStyleValue` function.
+ *@param {Theme} theme The theme object that contains breakpoint information.
+ *@param {StyledProperties | T} styleProps A StyledProperties object that contains the styles to be mapped,
+ *or a generic object T that will be passed to the callbackStyleValue function.
+ *@param {(prop: ExtractGenericObject<T>) => CSS.Properties} callbackStyleValue A callback function that takes in an
+ *ExtractGenericObject<T> object and returns the resulting CSS.Properties object.
+ *@returns {JssStyle} A JssStyle object that contains the resulting styles from the callbackStyleValue function.
+ * @example
+ *   // Will result in {backgroundColor: "red"} style being added to the component
+ *   const Component = styled.div(({theme}) => ({
+ *    ...handleBreakpoints(theme, "red", (color) => ({backgroundColor: color}))
+ *  }))
+ * @example
+ *  // Will result in {display: "flex", flexDirection: 'column'} styles being added to the component
+ *  const Component = styled.div(({theme}) => ({
+ *    ...handleBreakpoints(theme, {display: "flex", flexDirection: 'column'}, ({display, flexDirection}) => ({display, flexDirection}))
+ *  }))
+ * @example
+ * // Will result in {backgroundColor: "red"} for Mediaquery md and up, end then switch to blue for lg and up
+ *   const Component = styled.div(({theme}) => ({
+ *    ...handleBreakpoints(theme, {backgroundColor: {md: "red", lg: "blue"}}, ({backgroundColor}) => ({backgroundColor}))
+ *  }))
+ */
 export const handleBreakpoints = <T>(
   theme: Theme,
   styleProps: StyledProperties | T,
@@ -117,10 +130,6 @@ export const handleBreakpoints = <T>(
 
   const css = mappedStyles.css<T>(callbackStyleValue);
   const breakpointCSS = mappedStyles.breakpointCSS<T>(callbackStyleValue);
-
-  console.log(css);
-  console.log(breakpointCSS);
-
 
   return { ...css, ...breakpointCSS };
 };
@@ -181,8 +190,8 @@ class MappedStyles {
    * @returns { { [key: string]: CSS.Properties } }
    * @example
    * return {
-    * "@media (min-width:0px)": {paddingTop: "20px", paddingBottom: "10px"},
-    * "@media (min-width:900px)": {paddingTop: "20px", paddingBottom: "10px"}
+   * "@media (min-width:0px)": {paddingTop: "20px", paddingBottom: "10px"},
+   * "@media (min-width:900px)": {paddingTop: "20px", paddingBottom: "10px"}
    *  }
    */
   breakpointCSS = <T>(

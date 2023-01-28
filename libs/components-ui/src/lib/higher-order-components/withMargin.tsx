@@ -45,43 +45,27 @@ Higher-Order Component that adds margin to a wrapped component.
 const withMargin = <T,>(WrappedComponent: ComponentType<T>) => {
   const MarginHoc = styled(WrappedComponent)<Partial<IMarginProps> & T>(
     ({ theme, m, mt, mr, mb, ml, mx, my }) => ({
-      ...(m && {
-        ...handleBreakpoints(m, (propValue) => ({
-          margin: `${theme.spacing(propValue)}px`,
-        })),
-      }),
-      ...(mt && {
-        ...handleBreakpoints(mt, (propValue) => ({
-          marginTop: `${theme.spacing(propValue)}px`,
-        })),
-      }),
-      ...(mr && {
-        ...handleBreakpoints(mr, (propValue) => ({
-          marginRight: `${theme.spacing(propValue)}px`,
-        })),
-      }),
-      ...(mb && {
-        ...handleBreakpoints(mb, (propValue) => ({
-          marginBottom: `${theme.spacing(propValue)}px`,
-        })),
-      }),
-      ...(ml && {
-        ...handleBreakpoints(ml, (propValue) => ({
-          marginLeft: `${theme.spacing(propValue)}px`,
-        })),
-      }),
-      ...(mx && {
-        ...handleBreakpoints(mx, (propValue) => ({
-          marginRight: `${theme.spacing(propValue)}px`,
-          marginLeft: `${theme.spacing(propValue)}px`,
-        })),
-      }),
-      ...(my && {
-        ...handleBreakpoints(my, (propValue) => ({
-          marginTop: `${theme.spacing(propValue)}px`,
-          marginBottom: `${theme.spacing(propValue)}px`,
-        })),
-      }),
+      ...handleBreakpoints(
+        theme,
+        { m, mt, mr, mb, ml, mx, my },
+        ({ m, mt, mr, mb, ml, mx, my }) => {
+          if (mx) {
+            mr = mx;
+            ml = mx;
+          }
+          if (my) {
+            mt = my;
+            mb = my;
+          }
+          return {
+            marginTop: `${theme.spacing(mt)}px`,
+            marginRight: `${theme.spacing(mr)}px`,
+            marginBottom: `${theme.spacing(mb)}px`,
+            marginLeft: `${theme.spacing(ml)}px`,
+            margin: `${theme.spacing(m)}px`,
+          };
+        }
+      ),
     })
   );
   return (props: T & Partial<IMarginProps>) => {

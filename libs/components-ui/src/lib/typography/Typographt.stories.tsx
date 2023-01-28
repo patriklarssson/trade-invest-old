@@ -11,17 +11,15 @@ export default {
 } as ComponentMeta<typeof Typography>;
 
 const Template: ComponentStory<typeof Typography> = (args) => {
-  return <Typography {...args}>{args.children}</Typography>;
+  return <Typography display="flex" justifyContent="center" gap="10px" {...args}>{args.children}</Typography>;
 };
 
 export const Component = Template.bind({});
 Component.args = {
   variant: 'h1',
   children: 'Typography',
-  borderTop: { xs: 1, xl: 1 },
-  borderRight: { xs: 1, md: 1, lg: 1, xl: 1 },
-  borderBottom: 1,
-  borderLeft: 1,
+  display: 'flex',
+
 };
 
 export const Variants = () => (

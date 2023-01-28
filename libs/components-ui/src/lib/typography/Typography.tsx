@@ -2,11 +2,10 @@ import styled from '@emotion/styled';
 import type * as CSS from 'csstype';
 import React, { HTMLAttributes } from 'react';
 import {
-  withAlignContent,
-  withAlignItems,
   withBorder,
   withBoxShadow,
   withDisplay,
+  withFlexBox,
   withMargin,
   withPadding,
 } from '../higher-order-components';
@@ -142,4 +141,4 @@ const Typography = (props: ITypographyProps) => {
   );
 };
 
-export default compose(withPadding, withMargin, withBorder, withBoxShadow, withDisplay, withAlignContent, withAlignItems)(Typography);
+export default compose(withPadding, withMargin, withBorder, withBoxShadow, withDisplay, withFlexBox)(Typography);

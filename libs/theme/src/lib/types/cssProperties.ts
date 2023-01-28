@@ -2,7 +2,7 @@ import { Breakpoint, IntRange, Spacing } from '@trade-invest/theme';
 import type * as CSS from 'csstype';
 
 
-export type WithBreakpoint<T> = { [breakpoint in keyof Breakpoint]?: T };
+
 
 export type FlexDirection = Exclude<CSS.Property.FlexDirection, CSS.Globals>;
 export type FlexWrap = CSS.Property.FlexWrap
@@ -36,16 +36,16 @@ export type ColorTypes =
 
 export type BaseSize = 'small' | 'medium' | 'large';
 
-export type AllCombined =
-  | FlexDirection
-  | FlexWrap
-  | Spacing
-  | JustifyContent
-  | AlignItems
-  | BasicTextAlign
-  | Orientation
-  | GridColumns
-  | ColorTypes
-  | BaseSize;
+// export type AllCombined =
+//   | FlexDirection
+//   | FlexWrap
+//   | Spacing
+//   | JustifyContent
+//   | AlignItems
+//   | BasicTextAlign
+//   | Orientation
+//   | GridColumns
+//   | ColorTypes
+//   | BaseSize;
 
-export type BreakPointToStyle = WithBreakpoint<AllCombined> | AllCombined;
+// export type BreakPointToStyle = WithBreakpoint<AllCombined> | AllCombined;

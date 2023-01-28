@@ -3,6 +3,7 @@ import { matchers } from '@emotion/jest';
 import styled from '@emotion/styled';
 import withPadding from './withPadding';
 import { ThemeProvider } from '@emotion/react';
+
 expect.extend(matchers);
 
 // const mockTheme: any = {
@@ -92,7 +93,7 @@ describe('withPadding', () => {
       .toJSON();
 
     expect(tree).toHaveStyleRule('padding-left', '1px', {
-      media: mockTheme.breakpoint.up(bp.md),
+      media: mockTheme.breakpoint.up('md'),
     });
     expect(tree).toHaveStyleRule('padding-bottom', '1px');
   });

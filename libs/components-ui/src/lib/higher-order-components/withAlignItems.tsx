@@ -7,9 +7,7 @@ interface IAlignItemsProps {
   /**
    * AlignItems property. Can be an object with breakpoints.
    */
-  alignItems:
-    | CSS.Property.AlignItems
-    | WithBreakpoint<CSS.Property.AlignItems>;
+  alignItems: CSS.Property.AlignItems | WithBreakpoint<CSS.Property.AlignItems>;
 }
 
 /**
@@ -18,15 +16,15 @@ Higher-Order Component that adds alignItems to a wrapped component.
 @returns {function(T & Partial<IAlignItemsProps>): JSX.Element} - A higher-order component that adds alignItems to a wrapped component.
  */
 const withAlignItems = <T,>(WrappedComponent: ComponentType<T>) => {
-  const AlignItemsHoc = styled(WrappedComponent)<
-    Partial<IAlignItemsProps> & T
-  >(({ alignItems }) => ({
-    ...(alignItems && {
-      ...handleBreakpoints(alignItems, (propValue) => ({
-        alignItems: propValue,
-      })),
-    }),
-  }));
+  const AlignItemsHoc = styled(WrappedComponent)<Partial<IAlignItemsProps> & T>(
+    ({ theme, alignItems }) => ({
+      ...(alignItems && {
+        ...handleBreakpoints(theme, { alignItems }, ({ alignItems }) => ({
+          alignItems,
+        })),
+      }),
+    })
+  );
   return (props: T & Partial<IAlignItemsProps>) => {
     return <AlignItemsHoc {...props} />;
   };

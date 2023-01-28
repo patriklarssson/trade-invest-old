@@ -20,10 +20,10 @@ Higher-Order Component that adds alignContent to a wrapped component.
 const withAlignContent = <T,>(WrappedComponent: ComponentType<T>) => {
   const AlignContentHoc = styled(WrappedComponent)<
     Partial<IAlignContentProps> & T
-  >(({ alignContent }) => ({
+  >(({ theme, alignContent }) => ({
     ...(alignContent && {
-      ...handleBreakpoints(alignContent, (propValue) => ({
-        alignContent: propValue,
+      ...handleBreakpoints(theme, { alignContent }, ({ alignContent }) => ({
+        alignContent,
       })),
     }),
   }));

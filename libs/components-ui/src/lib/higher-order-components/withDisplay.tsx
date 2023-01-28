@@ -15,13 +15,10 @@ Higher-Order Component that adds padding to a wrapped component.
  */
 const withDisplay = <T,>(WrappedComponent: ComponentType<T>) => {
   const DisplayHoc = styled(WrappedComponent)<Partial<IDisplayProps> & T>(
-    ({ display, hidden }) => ({
-      ...(display && {
-        ...handleBreakpoints(display, (propValue) => ({
-          display: propValue,
-        })),
-      }),
-      ...(hidden && !display && {
+    ({ theme, display, hidden }) => ({
+      ...handleBreakpoints(theme, { display }, ({ display }) => ({ display })),
+      ...(hidden &&
+        !display && {
           display: 'none',
         }),
     })
