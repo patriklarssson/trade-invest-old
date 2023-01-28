@@ -20,6 +20,16 @@ type StyledProperties = {
     | CSS.Properties[P];
 };
 
+type StyledMediaQuery = {
+  [key: string]: {
+    [P in keyof CSS.Properties]: CSS.Properties[P];
+  };
+};
+
+type TempReturnType =
+  | (StyledMediaQuery | CSS.Properties)
+  | (StyledMediaQuery & CSS.Properties);
+
 /**
  * @param theme The theme object containing breakpoint information
  * @param styleProps An object of type `StyledProperties` or `T`
@@ -30,17 +40,17 @@ export const handleBreakpoints = <T>(
   theme: Theme,
   styleProps: StyledProperties | T,
   callbackStyleValue: (prop: ExtractGenericObject<T>) => CSS.Properties
-) => {
-  console.log('styleProps', styleProps);
-  console.log('callbackStyleValue(styleProps)', callbackStyleValue(styleProps));
+): TempReturnType => {
+  // if styleProps = number | string return directly
+  if (isGenericStyle(styleProps)) return callbackStyleValue(styleProps);
 
-  if (typeof styleProps !== 'object')
-    return callbackStyleValue(styleProps as ExtractGenericObject<T>);
+  const mappedStyles = new BP(styleProps as any);
+  console.log('mappedStyles', mappedStyles);
 
   const { breakpoint } = theme;
-  const { breakpointStyles, regularStyles } = seperateStyles(styleProps);
+  // const { breakpointStyles, regularStyles } = seperateStyles(styleProps);
 
-  const breakpointCSS = Object.entries(breakpointStyles).reduce(
+  const breakpointCSS = Object.entries(mappedStyles.breakpointStyles).reduce(
     (acc, [bp, value]) => {
       if (isBreakpointKey(bp)) {
         acc[breakpoint.up(bp)] = Object.fromEntries(
@@ -56,7 +66,7 @@ export const handleBreakpoints = <T>(
 
   const css = Object.fromEntries(
     Object.entries(
-      callbackStyleValue(regularStyles as ExtractGenericObject<T>)
+      callbackStyleValue(mappedStyles.regularStyles as ExtractGenericObject<T>)
     ).filter(([_, style]) => {
       return style !== undefined && !style.includes('undefined');
     })
@@ -70,7 +80,7 @@ export const handleBreakpoints = <T>(
     )
   );
 
-  console.log(filteredObject);
+  // console.log('filteredObject', filteredObject);
 
   return filteredObject as { [key: string]: any };
 };
@@ -79,8 +89,37 @@ export const handleBreakpoints = <T>(
  * @param styleProps An object of type `WithBreakpoint<T>` or `T`
  * @returns An object containing two fields `breakpointStyles` and `regularStyles`
  */
+// const seperateStyles = <T>(styleProps: WithBreakpoint<T> | T) => {
+//   // if (!styleProps || typeof styleProps !== 'object') {
+//   if (!styleProps || isGenericStyle(styleProps)) {
+//     return {
+//       breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
+//       regularStyles: {} as ExtractGenericObject<T>,
+//     };
+//   }
+//   return Object.entries(styleProps).reduce(
+//     (acc, [key, value]) => {
+//       if (isWithBreakpoints(value)) {
+//         Object.entries(value).forEach(([breakpoint, val]) => {
+//           acc.breakpointStyles[breakpoint] = {
+//             ...acc.breakpointStyles[breakpoint],
+//             [key]: val,
+//           };
+//         });
+//       } else {
+//         acc.regularStyles = { ...acc.regularStyles, [key]: value };
+//       }
+//       return acc;
+//     },
+//     {
+//       breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
+//       regularStyles: {} as ExtractGenericObject<T>,
+//     }
+//   );
+// };
 const seperateStyles = <T>(styleProps: WithBreakpoint<T> | T) => {
-  if (!styleProps || typeof styleProps !== 'object') {
+  // if (!styleProps || typeof styleProps !== 'object') {
+  if (!styleProps || isGenericStyle(styleProps)) {
     return {
       breakpointStyles: {} as WithBreakpoint<ExtractGenericObject<T>>,
       regularStyles: {} as ExtractGenericObject<T>,
@@ -107,6 +146,30 @@ const seperateStyles = <T>(styleProps: WithBreakpoint<T> | T) => {
   );
 };
 
+class BP {
+  breakpointStyles: WithBreakpoint<CSS.Properties>;
+  regularStyles: CSS.Properties;
+  constructor(props: StyledProperties) {
+    this.regularStyles = {};
+    this.breakpointStyles = {};
+
+    Object.entries(props).forEach(([key, value]) => {
+      if (value && !isWithBreakpoints(value))
+      this.regularStyles = { ...this.regularStyles, [key]: value };
+
+      else if (value && isWithBreakpoints(value)) {
+        Object.entries(value).forEach(([breakpoint, val]) => {
+          if (isBreakpointKey(breakpoint))
+            this.breakpointStyles[breakpoint] = {
+              ...this.breakpointStyles[breakpoint],
+              [key]: val,
+            };
+        });
+      }
+    });
+  }
+}
+
 function isWithBreakpoints<T>(
   styled: WithBreakpoint<T> | T
 ): styled is WithBreakpoint<T> {
@@ -116,4 +179,10 @@ function isWithBreakpoints<T>(
 
 function isBreakpointKey(value: string): value is BreakpointKey {
   return ['xs', 'sm', 'md', 'lg', 'xl'].includes(value);
+}
+
+function isGenericStyle<T>(
+  value: StyledProperties | T
+): value is ExtractGenericObject<T> {
+  return typeof value !== 'object';
 }
