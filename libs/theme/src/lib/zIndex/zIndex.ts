@@ -1,4 +1,4 @@
-export const zIndex = {
+const zIndexProps = {
   mobileStepper: 1000,
   fab: 1050,
   speedDial: 1050,
@@ -7,4 +7,7 @@ export const zIndex = {
   modal: 1300,
   snackbar: 1400,
   tooltip: 1500,
-};
+} as const;
+
+export type ZIndex = keyof typeof zIndexProps
+export const zIndex = (index: ZIndex | undefined) => index ? zIndexProps[index] : undefined

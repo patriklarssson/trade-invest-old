@@ -119,3 +119,74 @@ interface ITypes {
   dark: string;
   contrastText: string;
 }
+
+export type ThemeColors =
+  //Common
+  | ['common', 'white']
+  | ['common', 'black']
+  //Primary
+  | ['primary', 'main']
+  | ['primary', 'light']
+  | ['primary', 'dark']
+  | ['primary', 'contrastText']
+  //Secondary
+  | ['secondary', 'main']
+  | ['secondary', 'light']
+  | ['secondary', 'dark']
+  | ['secondary', 'contrastText']
+  //Error
+  | ['error', 'main']
+  | ['error', 'light']
+  | ['error', 'dark']
+  | ['error', 'contrastText']
+  //Warning
+  | ['warning', 'main']
+  | ['warning', 'light']
+  | ['warning', 'dark']
+  | ['warning', 'contrastText']
+  //Info
+  | ['info', 'main']
+  | ['info', 'light']
+  | ['info', 'dark']
+  | ['info', 'contrastText']
+  //Success
+  | ['success', 'main']
+  | ['success', 'light']
+  | ['success', 'dark']
+  | ['success', 'contrastText']
+  //Grey
+  | ['grey', '50']
+  | ['grey', '100']
+  | ['grey', '200']
+  | ['grey', '300']
+  | ['grey', '400']
+  | ['grey', '500']
+  | ['grey', '600']
+  | ['grey', '700']
+  | ['grey', '800']
+  | ['grey', '900']
+  | ['grey', 'A100']
+  | ['grey', 'A200']
+  | ['grey', 'A400']
+  | ['grey', 'A700']
+  //Text
+  | ['text', 'primary']
+  | ['text', 'secondary']
+  | ['text', 'disabled']
+  //Divider
+  | ['divider']
+  //Background
+  | ['background', 'paper']
+  | ['background', 'default']
+  //Action
+  | ['action', 'active']
+  | ['action', 'hover']
+  | ['action', 'hoverOpacity']
+  | ['action', 'selected']
+  | ['action', 'selectedOpacity']
+  | ['action', 'disabled']
+  | ['action', 'disabledBackground']
+  | ['action', 'disabledOpacity']
+  | ['action', 'focus']
+  | ['action', 'focusOpacity']
+  | ['action', 'activatedOpacity'];

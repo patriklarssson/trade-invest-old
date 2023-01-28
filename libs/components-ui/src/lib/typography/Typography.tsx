@@ -4,6 +4,7 @@ import React, { HTMLAttributes } from 'react';
 import {
   withBorder,
   withBoxShadow,
+  withColor,
   withDisplay,
   withFlexBox,
   withMargin,
@@ -141,4 +142,4 @@ const Typography = (props: ITypographyProps) => {
   );
 };
 
-export default compose(withPadding, withMargin, withBorder, withBoxShadow, withDisplay, withFlexBox)(Typography);
+export default compose(withPadding, withMargin, withBorder, withBoxShadow, withDisplay, withColor, withFlexBox)(Typography);
