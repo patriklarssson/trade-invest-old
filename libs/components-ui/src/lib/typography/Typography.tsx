@@ -42,7 +42,7 @@ const defaultVariantMapping = {
   inherit: 'p',
 };
 
-interface ITypographyProps extends HTMLAttributes<HTMLElement> {
+interface ITypographyProps extends Omit<HTMLAttributes<HTMLElement>, "color"> {
   /**
    * The content of the component.
    */

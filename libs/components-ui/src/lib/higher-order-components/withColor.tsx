@@ -1,28 +1,29 @@
 import styled from '@emotion/styled';
-import { WithBreakpoint, handleBreakpoints, ZIndex, ThemeColors } from '@trade-invest/theme';
+import { handleBreakpoints, IPalette } from '@trade-invest/theme';
 import { ComponentType } from 'react';
-import type * as CSS from 'csstype';
-
 
 interface IColorProps {
-  bgColor: ThemeColors
+  bgColor: (palette: IPalette) => string
+  color: (palette: IPalette) => string
 }
 
 const withColor = <T,>(WrappedComponent: ComponentType<T>) => {
   const ColorHoc = styled(WrappedComponent)<Partial<IColorProps> & T>(
-    ({ theme, bgColor}) => ({
+    ({ theme, bgColor, color}) => ({
       ...handleBreakpoints(
         theme,
         {
-          bgColor
+          bgColor,
+          color
         },
-        ({ bgColor }) => {
-            if(bgColor && bgColor[0] && bgColor[1])
-            return {
-                backgroundColor: theme.palette[bgColor[0]][bgColor[1]],
-            }
-            return {}
-        }
+        ({ bgColor, color }) => ({
+          ...(bgColor && {
+            backgroundColor: bgColor(theme.palette)
+          }),
+          ...(color && {
+            color: color(theme.palette)
+          })
+        })
       ),
     })
   );
