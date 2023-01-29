@@ -10,4 +10,4 @@ export { IntRange } from './lib/types/range';
 export { ZIndex } from './lib/zIndex/zIndex';
 export * from './lib/types/cssProperties';
 export { handleBreakpoints, WithBreakpoint } from './lib/utilities/breakpoint';
-export { ThemeColors } from './lib/pallete/palette';
+export { IPalette } from './lib/pallete/palette';

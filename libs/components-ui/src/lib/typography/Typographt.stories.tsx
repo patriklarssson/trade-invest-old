@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof Typography>;
 
 const Template: ComponentStory<typeof Typography> = (args) => {
-  return <Typography bgColor={['action', "disabled"]} {...args}>{args.children}</Typography>;
+  return <Typography color={(x) => x.primary.main}  bgColor={(x) => x.common.black} {...args}>{args.children}</Typography>;
 };
 
 export const Component = Template.bind({});
