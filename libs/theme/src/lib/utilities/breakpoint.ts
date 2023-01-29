@@ -1,4 +1,4 @@
-import { Breakpoint, BreakpointKey } from '../breakpoint/mediaQueries';
+import { Breakpoint, BreakpointKey } from '../mediaquery/mediaQueries';
 import type * as CSS from 'csstype';
 import { Theme } from '@emotion/react';
 

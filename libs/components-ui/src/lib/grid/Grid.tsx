@@ -1,13 +1,11 @@
 import styled from '@emotion/styled';
 import {
-  FlexDirection,
-  FlexWrap,
-  GridColumns,
   handleBreakpoints,
   Spacing,
   WithBreakpoint,
 } from '@trade-invest/theme';
 import { HTMLAttributes } from 'react';
+import type * as CSS from 'csstype';
 
 interface IGridProps extends HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -15,11 +13,11 @@ interface IGridProps extends HTMLAttributes<HTMLElement> {
   // rowSpacing
   component?: React.ElementType;
   container?: boolean;
-  direction?: FlexDirection;
+  direction?: CSS.Property.FlexDirection;
   item?: boolean;
-  columns?: GridColumns | WithBreakpoint<GridColumns>;
+  columns?: CSS.Property.GridColumn | WithBreakpoint<CSS.Property.GridColumn>;
   spacing?: Spacing | WithBreakpoint<Spacing>;
-  wrap?: FlexWrap;
+  wrap?: CSS.Property.FlexWrap;
   zeroMinWidth?: boolean;
 }
 const columnWidth = (columnValue: number) =>

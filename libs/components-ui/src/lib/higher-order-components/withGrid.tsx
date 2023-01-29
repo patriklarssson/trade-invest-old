@@ -3,6 +3,8 @@ import { WithBreakpoint, handleBreakpoints } from '@trade-invest/theme';
 import { ComponentType } from 'react';
 import type * as CSS from 'csstype';
 
+//TODO GRID 1-12 IntRange<1, 13> | 'auto'
+
 interface IGridProps {
   gridTemplateColumns:
     | CSS.Property.GridTemplateColumns

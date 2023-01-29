@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { AlignItems, FlexDirection, handleBreakpoints, JustifyContent, Spacing, WithBreakpoint } from '@trade-invest/theme';
+import { handleBreakpoints, Spacing, WithBreakpoint } from '@trade-invest/theme';
 import React, { HTMLAttributes, ReactElement } from 'react';
-
+import type * as CSS from 'csstype';
 
 interface IStackProps extends HTMLAttributes<HTMLElement> {
   /**
@@ -11,15 +11,15 @@ interface IStackProps extends HTMLAttributes<HTMLElement> {
   /**
    * Defines the flex-direction.
    */
-  direction?: FlexDirection | WithBreakpoint<FlexDirection>;
+  direction?: CSS.Property.FlexDirection | WithBreakpoint<CSS.Property.FlexDirection>;
   /**
    * Defines the justify-content
    */
-  justifyContent?: JustifyContent | WithBreakpoint<JustifyContent>;
+  justifyContent?: CSS.Property.JustifyContent | WithBreakpoint<CSS.Property.JustifyContent>;
   /**
    * Defines the align-items
    */
-  alignItems?: AlignItems | WithBreakpoint<AlignItems>;
+  alignItems?: CSS.Property.AlignItems | WithBreakpoint<CSS.Property.AlignItems>;
   /**
    * Add an element between each child.
    */

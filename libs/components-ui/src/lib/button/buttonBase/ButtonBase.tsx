@@ -10,7 +10,7 @@ interface IButtonBaseProps {
 const ButtonBaseRoot = styled.button<{ ownerState: IButtonBaseProps }>(
   ({ theme, ownerState }) => ({
 
-    boxShadow: theme.shadows(10).
+    boxShadow: theme.shadows(10),
 
     display: 'inline-flex',
     alignItems: 'center',

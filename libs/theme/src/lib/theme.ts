@@ -1,4 +1,4 @@
-import createBreakPoints from './breakpoint/mediaQueries';
+import createBreakPoints from './mediaquery/mediaQueries';
 import { lightPalette } from './pallete/palette';
 import { shadow } from './shadows/shadows';
 import { spacing } from './spacing/spacing';

@@ -1,4 +1,4 @@
-import { IntRange } from '../types/range';
+import { IntRange } from '../types';
 
 const shadows = [
   'none',

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { HTMLAttributes } from 'react';
-import { BasicTextAlign, Orientation } from '../../../../theme/src/lib/types/cssProperties';
+import type * as CSS from 'csstype';
 
 interface IDividerProps extends HTMLAttributes<HTMLElement> {
   /**
@@ -17,12 +17,12 @@ interface IDividerProps extends HTMLAttributes<HTMLElement> {
    * The component orientation.
    * @default horizontal
    */
-  orientation?: Orientation;
+  orientation?: 'horizontal' | 'vertical';
   /**
    * The text alignment.
    * @default center
    */
-  textAlign?: BasicTextAlign;
+  textAlign?: CSS.Property.TextAlign;
   /**
    * If `true`, a vertical divider will have the correct height when used in flex container.
    * (By default, a vertical divider will have a calculated height of `0px` if it is the child of a flex container.)

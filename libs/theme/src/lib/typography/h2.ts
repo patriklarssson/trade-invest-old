@@ -1,4 +1,4 @@
-import createBreakPoints from '../breakpoint/mediaQueries';
+import createBreakPoints from '../mediaquery/mediaQueries';
 import { fontWeight } from './fontWeight';
 
 const breakpoint = createBreakPoints();
