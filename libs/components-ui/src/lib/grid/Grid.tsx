@@ -1,104 +1,122 @@
 import styled from '@emotion/styled';
 import {
   handleBreakpoints,
+  IntRange,
   Spacing,
   WithBreakpoint,
 } from '@trade-invest/theme';
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, useContext } from 'react';
 import type * as CSS from 'csstype';
+import React from 'react';
+
+type GridDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
+type GridWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
 interface IGridProps extends HTMLAttributes<HTMLElement> {
+  // interface IGridProps {
   children?: React.ReactNode;
-  // columnSpacing
-  // rowSpacing
-  component?: React.ElementType;
-  container?: boolean;
-  direction?: CSS.Property.FlexDirection;
-  item?: boolean;
-  columns?: CSS.Property.GridColumn | WithBreakpoint<CSS.Property.GridColumn>;
+  columns?: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>>;
+  auto?: boolean;
   spacing?: Spacing | WithBreakpoint<Spacing>;
-  wrap?: CSS.Property.FlexWrap;
-  zeroMinWidth?: boolean;
+  columnSpacing?: Spacing | WithBreakpoint<Spacing>;
+  rowSpacing?: Spacing | WithBreakpoint<Spacing>;
+  container?: boolean;
+  direction?: GridDirection | WithBreakpoint<GridDirection>;
+  disableEqualOverflow?: boolean;
+  wrap?: GridWrap | WithBreakpoint<GridWrap>;
+  component?: React.ElementType;
 }
-const columnWidth = (columnValue: number) =>
-  `${Math.round((columnValue / 12) * 10e7) / 10e5}%`;
 
 const GridRoot = styled.div<{ ownerState: IGridProps }>(
-  ({ theme, ownerState }) => ({
-    boxSizing: 'border-box',
-
-    // ...handleBreakpoints(
-    //   {
-    //     tst: 5,
-    //     xs: { one: 'red', two: 'blue' },
-    //     test: { yeet: '' },
-    //     xl: { one: 'yellow' },
-    //   },
-    //   (propValue) => ({
-    //     backgroundColor: propValue.one,
-    //     color: propValue.two,
-    //   })
-    // ),
-
-    ...(ownerState.container && {
-      display: 'flex',
-      flexWrap: ownerState.wrap,
-      flexDirection: ownerState.direction,
-      ...(ownerState.spacing && {
-        ...handleBreakpoints(ownerState.spacing, (propValue) => ({
-          marginLeft: `-${theme.spacing(propValue)}px`,
-          marginTop: `-${theme.spacing(propValue)}px`,
-          width: `calc(100% + ${theme.spacing(propValue)}px)`,
+  ({
+    theme,
+    ownerState: {
+      container,
+      direction,
+      wrap,
+      spacing,
+      columns,
+      rowSpacing,
+      columnSpacing,
+      auto,
+    },
+  }) => {
+    if (container) {
+      return {
+        flexDirection: direction,
+        minWidth: 0,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexWrap: wrap,
+        ...handleBreakpoints(theme, { spacing }, ({ spacing }) => ({
+          margin: `calc(${theme.spacing(spacing)}px / 2)`,
         })),
-        '>*': {
-          ...handleBreakpoints(ownerState.spacing, (propValue) => ({
-            paddingLeft: theme.spacing(propValue),
-            paddingTop: theme.spacing(propValue),
-          })),
-          margin: 0,
-          flexDirection: ownerState.direction,
-          WebkitBoxFlex: 0,
-          flexGrow: 0,
-        },
-      }),
-    }),
+      };
+    }
 
-    ...(ownerState.item && {
-      margin: 0,
-    }),
-    ...(ownerState.zeroMinWidth && {
+    if (auto) {
+      return {
+        flexBasis: 0,
+        flexGrow: 1,
+        maxWidth: '100%',
+        minWidth: 0,
+        boxSizing: 'border-box',
+        ...handleBreakpoints(
+          theme,
+          { spacing, rowSpacing, columnSpacing },
+          ({ spacing, rowSpacing, columnSpacing }) => ({
+            padding: `${theme.spacing(rowSpacing ?? spacing)}px ${theme.spacing(
+              columnSpacing ?? spacing
+            )}px`,
+          })
+        ),
+      };
+    }
+
+    return {
+      flexGrow: 0,
+      flexBasis: 'auto',
       minWidth: 0,
-    }),
-    ...(ownerState.columns &&
-      !ownerState.container && {
-        ...handleBreakpoints(ownerState.columns, (propValue) => ({
-          ...(propValue === 'auto' && {
-            flexBasis: 'auto',
-            flexGrow: '1',
-            flexShrink: '0',
-            maxWidth: 'none',
-            width: 'auto',
+      boxSizing: 'border-box',
+      ...handleBreakpoints(
+        theme,
+        { spacing, columns, rowSpacing, columnSpacing },
+        ({ spacing, columns, rowSpacing, columnSpacing }) => ({
+          padding: `${theme.spacing(rowSpacing ?? spacing)}px ${theme.spacing(
+            columnSpacing ?? spacing
+          )}px`,
+          ...(columns && {
+            width: `${(100 * columns) / 12}%`,
           }),
-          ...(propValue !== 'auto' && {
-            flexBasis: columnWidth(Number(propValue)),
-            maxWidth: columnWidth(Number(propValue)),
-          }),
-        })),
-      }),
-  })
+        })
+      ),
+    };
+
+    return {};
+  }
 );
 
+
+const GridContext = React.createContext<{
+  spacing?: Spacing | WithBreakpoint<Spacing>;
+  columnSpacing?: Spacing | WithBreakpoint<Spacing>;
+  rowSpacing?: Spacing | WithBreakpoint<Spacing>;
+}>({});
+
 export function Grid(props: IGridProps) {
+  const spacingContext = useContext(GridContext);
+
   const {
     children,
     component = 'div',
-    container = false,
     direction = 'row',
-    item = false,
-    columns = { xs: 12 },
-    spacing = 0,
+    auto = false,
+    columns = 12,
+    spacing = spacingContext.spacing ?? 0,
+    rowSpacing = spacingContext.rowSpacing ?? 0,
+    columnSpacing = spacingContext.columnSpacing ?? 0,
     wrap = 'wrap',
-    zeroMinWidth = false,
+    container = false,
     ...other
   } = props;
 
@@ -106,22 +124,23 @@ export function Grid(props: IGridProps) {
     ...props,
     container,
     direction,
-    item,
-    wrap,
-    zeroMinWidth,
-    spacing,
     columns,
+    spacing,
+    rowSpacing,
+    columnSpacing,
+    auto,
+    wrap,
   };
 
-  const brekpoint = handleBreakpoints(5, (propValue) => ({
-    fontSize: `${propValue}px`,
-  }));
-
-  console.log(brekpoint);
-
   return (
-    <GridRoot ownerState={ownerState} as={component} {...other}>
-      {children}
+    <GridRoot as={component} ownerState={ownerState} {...other}>
+      {container ? (
+        <GridContext.Provider value={{ spacing, columnSpacing, rowSpacing }}>
+          {children}
+        </GridContext.Provider>
+      ) : (
+        children
+      )}
     </GridRoot>
   );
 }

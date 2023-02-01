@@ -8,27 +8,45 @@ export default {
 
 export const GridLayout = () => {
   return (
-    <Grid container spacing={6}>
-      <Grid item columns={{ md: 4, xl: 8 }}>
-        <div style={{ height: '100%', width: '100%' }}>Yes</div>
+    <div>
+      <Grid container columnSpacing={6} spacing={2}>
+        <Grid columns={8}>
+          <div style={{ backgroundColor: 'red' }}>8</div>
+        </Grid>
+        <Grid columns={12}>
+          <div style={{ backgroundColor: 'red' }}>12</div>
+        </Grid>
+        <Grid columns={8}>
+          <div style={{ backgroundColor: 'red' }}>8</div>
+        </Grid>
+        <Grid columns={4}>
+          <div style={{ backgroundColor: 'red' }}>4</div>
+        </Grid>
+        <Grid columns={3}>
+          <div style={{ backgroundColor: 'red' }}>3</div>
+        </Grid>
+        <Grid columns={3}>
+          <div style={{ backgroundColor: 'red' }}>3</div>
+        </Grid>
+        <Grid columns={3}>
+          <div style={{ backgroundColor: 'red' }}>3</div>
+        </Grid>
+        <Grid columns={3}>
+          <div style={{ backgroundColor: 'red' }}>3</div>
+        </Grid>
       </Grid>
-      <Grid columns={1}>
-        <div style={{ height: '100%', width: '100%' }}>Yes</div>
+      <h1>new</h1>
+      <Grid container spacing={{xs: 1, sm: 2, md: 3, lg: 4, xl: 5}}>
+        <Grid auto>
+          <div style={{ backgroundColor: 'red' }}>auto</div>
+        </Grid>
+        <Grid columns={{xs: 1, sm: 2, md: 3, lg: 4, xl: 5}}>
+          <div style={{ backgroundColor: 'red' }}>6</div>
+        </Grid>
+        <Grid auto>
+          <div style={{ backgroundColor: 'red' }}>auto</div>
+        </Grid>
       </Grid>
-      <Grid item columns={8}>
-        <div style={{ height: '100%', width: '100%' }}>Yes</div>
-      </Grid>
-    </Grid>
-    // <Grid container spacing={6}>
-    //     <Grid item columns={3}>
-    //         <div style={{height: "100%", width: "100%", backgroundColor: "red"}}>Yes</div>
-    //     </Grid>
-    //     <Grid columns={1}>
-    //         <div style={{height: "100%", width: "100%", backgroundColor: "blue"}}>Yes</div>
-    //     </Grid>
-    //     <Grid item columns={8}>
-    //         <div style={{height: "100%", width: "100%", backgroundColor: "orange"}}>Yes</div>
-    //     </Grid>
-    // </Grid>
+    </div>
   );
 };
