@@ -14,6 +14,8 @@ import { withDisplay } from '../higher-order-components';
 type GridDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 type GridWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
+const maxGridColumns = 12
+
 interface IGridProps {
   children: React.ReactNode;
   columns: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>>;
@@ -30,10 +32,13 @@ interface IGridProps {
     | CSS.Property.JustifyContent
     | WithBreakpoint<CSS.Property.JustifyContent>;
   alignItems: CSS.Property.AlignItems | WithBreakpoint<CSS.Property.AlignItems>;
-  offset: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>> | "auto"
+  offset: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>> | 'auto';
 }
 
-const GridRoot = styled.div<{ ownerState: Partial<IGridProps> }>(
+const GridRoot = styled.div<{
+  ownerState: Partial<IGridProps>;
+  isNestedContainer?: boolean;
+}>(
   ({
     theme,
     ownerState: {
@@ -47,8 +52,9 @@ const GridRoot = styled.div<{ ownerState: Partial<IGridProps> }>(
       auto,
       justifyContent,
       alignItems,
-      offset
+      offset,
     },
+    isNestedContainer: isNestedContainer,
   }) => {
     let styles: Partial<CSS.Properties> = {
       minWidth: 0,
@@ -88,7 +94,7 @@ const GridRoot = styled.div<{ ownerState: Partial<IGridProps> }>(
           wrap,
           justifyContent,
           alignItems,
-          offset
+          offset,
         },
         ({
           columns,
@@ -99,7 +105,7 @@ const GridRoot = styled.div<{ ownerState: Partial<IGridProps> }>(
           wrap,
           justifyContent,
           alignItems,
-          offset
+          offset,
         }) => ({
           justifyContent,
           alignItems,
@@ -110,28 +116,32 @@ const GridRoot = styled.div<{ ownerState: Partial<IGridProps> }>(
               rowSpacing ?? spacing
             )}px -${theme.spacing(columnSpacing ?? spacing)}px`,
           }),
-          ...(auto &&
-            !container && {
+          ...(auto && {
               padding: `${theme.spacing(
                 rowSpacing ?? spacing
               )}px ${theme.spacing(columnSpacing ?? spacing)}px`,
             }),
-          ...(!auto &&
-            !container && {
+          ...(!auto && {
+            ...((!container || isNestedContainer) && {
               padding: `${theme.spacing(
                 rowSpacing ?? spacing
               )}px ${theme.spacing(columnSpacing ?? spacing)}px`,
-              ...(columns && {
-                width: `${(100 * columns) / 12}%`,
+            }),
+              ...(columns && !container && {
+                width: `${(100 * columns) / maxGridColumns}%`,
               }),
             }),
-          ...(offset && !container && {
-            ...(offset === "auto" && {
-              marginLeft: "auto"
+          ...(offset && {
+              ...(offset === 'auto' && {
+                marginLeft: 'auto',
+              }),
+              ...(offset !== 'auto' && {
+                marginLeft: `calc(100% * ${offset} / ${maxGridColumns})`,
+              }),
             }),
-            ...(offset !== "auto" && {
-              marginLeft: `calc(100% * ${offset} / 12)`
-            })
+          // //Nested container
+          ...(isNestedContainer && {
+            width: `calc(100% * ${columns} / ${maxGridColumns} + ${theme.spacing(columnSpacing ?? spacing) * 2}px)`
           })
         })
       ),
@@ -144,7 +154,8 @@ const GridContext = React.createContext<{
   spacing?: Spacing | WithBreakpoint<Spacing>;
   columnSpacing?: Spacing | WithBreakpoint<Spacing>;
   rowSpacing?: Spacing | WithBreakpoint<Spacing>;
-}>({});
+  hasContainer: boolean;
+}>({ hasContainer: false });
 
 export function Grid(props: Partial<IGridProps>) {
   const spacingContext = useContext(GridContext);
@@ -154,7 +165,7 @@ export function Grid(props: Partial<IGridProps>) {
     component = 'div',
     direction = 'row',
     auto = false,
-    columns = 12,
+    columns = maxGridColumns,
     spacing = spacingContext.spacing ?? 0,
     rowSpacing = spacingContext.rowSpacing ?? 0,
     columnSpacing = spacingContext.columnSpacing ?? 0,
@@ -176,9 +187,16 @@ export function Grid(props: Partial<IGridProps>) {
   };
 
   return (
-    <GridRoot as={component} ownerState={ownerState} {...other}>
+    <GridRoot
+      isNestedContainer={container && spacingContext.hasContainer}
+      as={component}
+      ownerState={ownerState}
+      {...other}
+    >
       {container ? (
-        <GridContext.Provider value={{ spacing, columnSpacing, rowSpacing }}>
+        <GridContext.Provider
+          value={{ hasContainer: true, spacing, columnSpacing, rowSpacing }}
+        >
           {children}
         </GridContext.Provider>
       ) : (

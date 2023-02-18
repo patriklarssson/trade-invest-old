@@ -10,18 +10,54 @@ export const GridLayout = () => {
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid columns={12}>
+        <Grid columns={6}>
           <div style={{ backgroundColor: 'red' }}>child 1</div>
         </Grid>
-        <Grid container columns={12}>
+        <Grid columns={6}>
+          <div style={{ backgroundColor: 'red' }}>child 1</div>
+        </Grid>
+        <Grid container columns={6}>
           <Grid columns={6}>
             <div style={{ backgroundColor: 'red' }}>child 2</div>
           </Grid>
           <Grid columns={6}>
             <div style={{ backgroundColor: 'red' }}>child 2</div>
+          </Grid>
+          <Grid container columns={12}>
+            <Grid columns={6}>
+              <div style={{ backgroundColor: 'red' }}>child 3</div>
+            </Grid>
+            <Grid columns={6}>
+              <div style={{ backgroundColor: 'red' }}>child 3</div>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
+
+      {/* <Grid container spacing={2}>
+        <Grid columns={6}>
+          <div style={{ backgroundColor: 'red' }}>child 1</div>
+        </Grid>
+        <Grid columns={6}>
+          <div style={{ backgroundColor: 'red' }}>child 1</div>
+        </Grid>
+        <Grid container columns={6}>
+          <Grid columns={6}>
+            <div style={{ backgroundColor: 'red' }}>child 2</div>
+          </Grid>
+          <Grid columns={6}>
+            <div style={{ backgroundColor: 'red' }}>child 2</div>
+          </Grid>
+          <Grid container columns={12}>
+          <Grid columns={6}>
+            <div style={{ backgroundColor: 'red' }}>child 3</div>
+          </Grid>
+          <Grid columns={6}>
+            <div style={{ backgroundColor: 'red' }}>child 3</div>
+          </Grid>
+        </Grid>
+        </Grid>
+      </Grid> */}
 
       {/* <Grid container spacing={3}>
         <Grid columns={6} offset={"auto"}>
