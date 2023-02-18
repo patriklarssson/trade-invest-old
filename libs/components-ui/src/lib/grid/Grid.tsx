@@ -5,7 +5,7 @@ import {
   Spacing,
   WithBreakpoint,
 } from '@trade-invest/theme';
-import { useContext } from 'react';
+import { HTMLAttributes, useContext } from 'react';
 import type * as CSS from 'csstype';
 import React from 'react';
 import { compose } from '../utilities';
@@ -16,7 +16,7 @@ type GridWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
 const maxGridColumns = 12;
 
-interface IGridProps {
+interface IGridProps extends HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
   columns: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>>;
   auto: boolean;
@@ -25,14 +25,13 @@ interface IGridProps {
   rowSpacing: Spacing | WithBreakpoint<Spacing>;
   container: boolean;
   direction: GridDirection | WithBreakpoint<GridDirection>;
-  disableEqualOverflow: boolean;
   wrap: GridWrap | WithBreakpoint<GridWrap>;
   component: React.ElementType;
   justifyContent:
     | CSS.Property.JustifyContent
     | WithBreakpoint<CSS.Property.JustifyContent>;
   alignItems: CSS.Property.AlignItems | WithBreakpoint<CSS.Property.AlignItems>;
-  offset: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>> | 'auto';
+  offset: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13> | 'auto'> | 'auto';
 }
 
 const GridRoot = styled.div<{
@@ -81,6 +80,8 @@ const GridRoot = styled.div<{
       };
     }
 
+    const defaultSpacing = theme.spacing(spacing ?? 0);
+
     styles = {
       ...styles,
       ...handleBreakpoints(
@@ -108,13 +109,14 @@ const GridRoot = styled.div<{
           offset,
         }) => {
           const calculatedPadding = `${
-            theme.spacing(rowSpacing ?? spacing) ?? 0
-          }px ${theme.spacing(columnSpacing ?? spacing) ?? 0}px`;
+            theme.spacing(rowSpacing ?? spacing) ?? defaultSpacing
+          }px ${theme.spacing(columnSpacing ?? spacing) ?? defaultSpacing}px`;
           const rootContainerMargin = `-${
-            theme.spacing(rowSpacing ?? spacing) ?? 0
-          }px -${theme.spacing(columnSpacing ?? spacing) ?? 0}px`;
+            theme.spacing(rowSpacing ?? spacing) ?? defaultSpacing
+          }px -${theme.spacing(columnSpacing ?? spacing) ?? defaultSpacing}px`;
           const nestedContainerWidth = `calc(100% * ${columns} / ${maxGridColumns} + ${
-            (theme.spacing(columnSpacing ?? spacing) ?? 0) * 2
+            (theme.spacing(columnSpacing ?? spacing) ??
+              Number(defaultSpacing)) * 2
           }px)`;
 
           return {
