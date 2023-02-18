@@ -114,7 +114,7 @@ type JssStyle =
  *    ...handleBreakpoints(theme, {display: "flex", flexDirection: 'column'}, ({display, flexDirection}) => ({display, flexDirection}))
  *  }))
  * @example
- * // Will result in {backgroundColor: "red"} for Mediaquery md and up, end then switch to blue for lg and up
+ * // Will result in {backgroundColor: "red"} for Mediaquery md and up, then switch to blue for lg and up
  *   const Component = styled.div(({theme}) => ({
  *    ...handleBreakpoints(theme, {backgroundColor: {md: "red", lg: "blue"}}, ({backgroundColor}) => ({backgroundColor}))
  *  }))

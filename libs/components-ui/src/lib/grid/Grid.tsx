@@ -5,29 +5,35 @@ import {
   Spacing,
   WithBreakpoint,
 } from '@trade-invest/theme';
-import { HTMLAttributes, useContext } from 'react';
+import { useContext } from 'react';
 import type * as CSS from 'csstype';
 import React from 'react';
+import { compose } from '../utilities';
+import { withDisplay } from '../higher-order-components';
 
 type GridDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 type GridWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
-interface IGridProps extends HTMLAttributes<HTMLElement> {
-  // interface IGridProps {
-  children?: React.ReactNode;
-  columns?: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>>;
-  auto?: boolean;
-  spacing?: Spacing | WithBreakpoint<Spacing>;
-  columnSpacing?: Spacing | WithBreakpoint<Spacing>;
-  rowSpacing?: Spacing | WithBreakpoint<Spacing>;
-  container?: boolean;
-  direction?: GridDirection | WithBreakpoint<GridDirection>;
-  disableEqualOverflow?: boolean;
-  wrap?: GridWrap | WithBreakpoint<GridWrap>;
-  component?: React.ElementType;
+interface IGridProps {
+  children: React.ReactNode;
+  columns: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>>;
+  auto: boolean;
+  spacing: Spacing | WithBreakpoint<Spacing>;
+  columnSpacing: Spacing | WithBreakpoint<Spacing>;
+  rowSpacing: Spacing | WithBreakpoint<Spacing>;
+  container: boolean;
+  direction: GridDirection | WithBreakpoint<GridDirection>;
+  disableEqualOverflow: boolean;
+  wrap: GridWrap | WithBreakpoint<GridWrap>;
+  component: React.ElementType;
+  justifyContent:
+    | CSS.Property.JustifyContent
+    | WithBreakpoint<CSS.Property.JustifyContent>;
+  alignItems: CSS.Property.AlignItems | WithBreakpoint<CSS.Property.AlignItems>;
+  offset: IntRange<1, 13> | WithBreakpoint<IntRange<1, 13>> | "auto"
 }
 
-const GridRoot = styled.div<{ ownerState: IGridProps }>(
+const GridRoot = styled.div<{ ownerState: Partial<IGridProps> }>(
   ({
     theme,
     ownerState: {
@@ -39,63 +45,100 @@ const GridRoot = styled.div<{ ownerState: IGridProps }>(
       rowSpacing,
       columnSpacing,
       auto,
+      justifyContent,
+      alignItems,
+      offset
     },
   }) => {
-    if (container) {
-      return {
-        flexDirection: direction,
-        minWidth: 0,
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexWrap: wrap,
-        ...handleBreakpoints(theme, { spacing }, ({ spacing }) => ({
-          margin: `calc(${theme.spacing(spacing)}px / 2)`,
-        })),
-      };
-    }
+    let styles: Partial<CSS.Properties> = {
+      minWidth: 0,
+      boxSizing: 'border-box',
+    };
 
-    if (auto) {
-      return {
+    if (container) {
+      styles = {
+        ...styles,
+        display: 'flex',
+      };
+    } else if (auto) {
+      styles = {
+        ...styles,
         flexBasis: 0,
         flexGrow: 1,
         maxWidth: '100%',
-        minWidth: 0,
-        boxSizing: 'border-box',
-        ...handleBreakpoints(
-          theme,
-          { spacing, rowSpacing, columnSpacing },
-          ({ spacing, rowSpacing, columnSpacing }) => ({
-            padding: `${theme.spacing(rowSpacing ?? spacing)}px ${theme.spacing(
-              columnSpacing ?? spacing
-            )}px`,
-          })
-        ),
+      };
+    } else {
+      styles = {
+        ...styles,
+        flexGrow: 0,
+        flexBasis: 'auto',
       };
     }
 
-    return {
-      flexGrow: 0,
-      flexBasis: 'auto',
-      minWidth: 0,
-      boxSizing: 'border-box',
+    styles = {
+      ...styles,
       ...handleBreakpoints(
         theme,
-        { spacing, columns, rowSpacing, columnSpacing },
-        ({ spacing, columns, rowSpacing, columnSpacing }) => ({
-          padding: `${theme.spacing(rowSpacing ?? spacing)}px ${theme.spacing(
-            columnSpacing ?? spacing
-          )}px`,
-          ...(columns && {
-            width: `${(100 * columns) / 12}%`,
+        {
+          columns,
+          spacing,
+          rowSpacing,
+          columnSpacing,
+          direction,
+          wrap,
+          justifyContent,
+          alignItems,
+          offset
+        },
+        ({
+          columns,
+          spacing,
+          rowSpacing,
+          columnSpacing,
+          direction,
+          wrap,
+          justifyContent,
+          alignItems,
+          offset
+        }) => ({
+          justifyContent,
+          alignItems,
+          ...(container && {
+            flexDirection: direction,
+            flexWrap: wrap,
+            margin: `-${theme.spacing(
+              rowSpacing ?? spacing
+            )}px -${theme.spacing(columnSpacing ?? spacing)}px`,
           }),
+          ...(auto &&
+            !container && {
+              padding: `${theme.spacing(
+                rowSpacing ?? spacing
+              )}px ${theme.spacing(columnSpacing ?? spacing)}px`,
+            }),
+          ...(!auto &&
+            !container && {
+              padding: `${theme.spacing(
+                rowSpacing ?? spacing
+              )}px ${theme.spacing(columnSpacing ?? spacing)}px`,
+              ...(columns && {
+                width: `${(100 * columns) / 12}%`,
+              }),
+            }),
+          ...(offset && !container && {
+            ...(offset === "auto" && {
+              marginLeft: "auto"
+            }),
+            ...(offset !== "auto" && {
+              marginLeft: `calc(100% * ${offset} / 12)`
+            })
+          })
         })
       ),
     };
-
-    return {};
+    return styles;
   }
 );
-
 
 const GridContext = React.createContext<{
   spacing?: Spacing | WithBreakpoint<Spacing>;
@@ -103,7 +146,7 @@ const GridContext = React.createContext<{
   rowSpacing?: Spacing | WithBreakpoint<Spacing>;
 }>({});
 
-export function Grid(props: IGridProps) {
+export function Grid(props: Partial<IGridProps>) {
   const spacingContext = useContext(GridContext);
 
   const {
@@ -145,4 +188,4 @@ export function Grid(props: IGridProps) {
   );
 }
 
-export default Grid;
+export default compose(withDisplay)(Grid);
