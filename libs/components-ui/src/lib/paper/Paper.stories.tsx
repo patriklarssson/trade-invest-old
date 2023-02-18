@@ -12,7 +12,13 @@ export default {
   },
 } as ComponentMeta<typeof Paper>;
 
-const Container = styled(Stack)(() => ({
+// const Container = styled(Stack)(() => ({
+//   div: {
+//     height: 200,
+//     width: 200,
+//   },
+// }));
+const Container = styled("div")(() => ({
   div: {
     height: 200,
     width: 200,

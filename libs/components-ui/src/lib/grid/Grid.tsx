@@ -14,7 +14,7 @@ import { withDisplay } from '../higher-order-components';
 type GridDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse';
 type GridWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
-const maxGridColumns = 12
+const maxGridColumns = 12;
 
 interface IGridProps {
   children: React.ReactNode;
@@ -54,7 +54,7 @@ const GridRoot = styled.div<{
       alignItems,
       offset,
     },
-    isNestedContainer: isNestedContainer,
+    isNestedContainer,
   }) => {
     let styles: Partial<CSS.Properties> = {
       minWidth: 0,
@@ -106,32 +106,51 @@ const GridRoot = styled.div<{
           justifyContent,
           alignItems,
           offset,
-        }) => ({
-          justifyContent,
-          alignItems,
-          ...(container && {
-            flexDirection: direction,
-            flexWrap: wrap,
-            margin: `-${theme.spacing(
-              rowSpacing ?? spacing
-            )}px -${theme.spacing(columnSpacing ?? spacing)}px`,
-          }),
-          ...(auto && {
-              padding: `${theme.spacing(
-                rowSpacing ?? spacing
-              )}px ${theme.spacing(columnSpacing ?? spacing)}px`,
+        }) => {
+          const calculatedPadding = `${theme.spacing(
+            rowSpacing ?? spacing
+          )}px ${theme.spacing(columnSpacing ?? spacing)}px`;
+          const rootContainerMargin = `-${theme.spacing(
+            rowSpacing ?? spacing
+          )}px -${theme.spacing(columnSpacing ?? spacing)}px`;
+          const nestedContainerWidth = `calc(100% * ${columns} / ${maxGridColumns} + ${
+            (theme.spacing(columnSpacing ?? spacing) ?? 0) * 2
+          }px)`;
+
+          return {
+            justifyContent,
+            alignItems,
+            // Root Container
+            ...(container && {
+              flexDirection: direction,
+              flexWrap: wrap,
+              margin: rootContainerMargin,
             }),
-          ...(!auto && {
-            ...((!container || isNestedContainer) && {
-              padding: `${theme.spacing(
-                rowSpacing ?? spacing
-              )}px ${theme.spacing(columnSpacing ?? spacing)}px`,
+
+            // Nested container
+            ...(isNestedContainer && {
+              width: nestedContainerWidth,
+              padding: calculatedPadding,
             }),
-              ...(columns && !container && {
-                width: `${(100 * columns) / maxGridColumns}%`,
+
+            // Manuall columns (not auto)
+            ...(!auto && {
+              ...(!container && {
+                padding: calculatedPadding,
               }),
+              ...(columns &&
+                !container && {
+                  width: `${(100 * columns) / maxGridColumns}%`,
+                }),
             }),
-          ...(offset && {
+
+            // auto
+            ...(auto && {
+              padding: calculatedPadding,
+            }),
+
+            // offset
+            ...(offset && {
               ...(offset === 'auto' && {
                 marginLeft: 'auto',
               }),
@@ -139,11 +158,8 @@ const GridRoot = styled.div<{
                 marginLeft: `calc(100% * ${offset} / ${maxGridColumns})`,
               }),
             }),
-          // //Nested container
-          ...(isNestedContainer && {
-            width: `calc(100% * ${columns} / ${maxGridColumns} + ${theme.spacing(columnSpacing ?? spacing) * 2}px)`
-          })
-        })
+          };
+        }
       ),
     };
     return styles;
