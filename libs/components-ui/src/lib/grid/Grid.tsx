@@ -107,12 +107,12 @@ const GridRoot = styled.div<{
           alignItems,
           offset,
         }) => {
-          const calculatedPadding = `${theme.spacing(
-            rowSpacing ?? spacing
-          )}px ${theme.spacing(columnSpacing ?? spacing)}px`;
-          const rootContainerMargin = `-${theme.spacing(
-            rowSpacing ?? spacing
-          )}px -${theme.spacing(columnSpacing ?? spacing)}px`;
+          const calculatedPadding = `${
+            theme.spacing(rowSpacing ?? spacing) ?? 0
+          }px ${theme.spacing(columnSpacing ?? spacing) ?? 0}px`;
+          const rootContainerMargin = `-${
+            theme.spacing(rowSpacing ?? spacing) ?? 0
+          }px -${theme.spacing(columnSpacing ?? spacing) ?? 0}px`;
           const nestedContainerWidth = `calc(100% * ${columns} / ${maxGridColumns} + ${
             (theme.spacing(columnSpacing ?? spacing) ?? 0) * 2
           }px)`;
