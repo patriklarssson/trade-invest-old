@@ -1,5 +1,9 @@
 import { matchers } from '@emotion/jest';
-import { theme as themes } from '@trade-invest/theme';
+import {
+  BreakpointKey,
+  theme as themes,
+  WithBreakpoint,
+} from '@trade-invest/theme';
 import Grid from './Grid';
 import { renderWithTheme, isElement } from '../test-utilities';
 import { IGridProps } from './GridProps';
@@ -21,7 +25,6 @@ describe('Grid', () => {
       </Grid>
     );
     expect(element.hasChildNodes()).toBeTruthy();
-
     expect(element).toHaveStyleRule('min-width', '0');
     expect(element).toHaveStyleRule('box-sizing', 'border-box');
     expect(element).toHaveStyleRule('display', 'flex');
@@ -317,5 +320,136 @@ describe('Grid', () => {
       'width',
       `calc(100% * 6 / 12 + ${(theme.spacing(2) ?? 0) * 2}px)`
     );
+  });
+
+  test('should create grid with breakpoint for container and child', () => {
+    const testCases: {
+      container: TestCaseGrid<WithBreakpoint<object>>;
+      child: TestCaseGrid<WithBreakpoint<object>>;
+    }[] = [
+      {
+        container: {
+          props: {
+            spacing: { sm: 2, lg: 6 },
+            wrap: { md: 'wrap', lg: 'nowrap', xl: 'wrap-reverse' },
+            direction: { sm: 'row', md: 'column-reverse' },
+          },
+          expected: {
+            sm: {
+              'flex-direction': 'row',
+            },
+            md: {
+              'flex-wrap': 'wrap',
+              'flex-direction': 'column-reverse',
+            },
+            lg: {
+              'flex-wrap': 'nowrap',
+            },
+            xl: {
+              'flex-wrap': 'wrap-reverse',
+            },
+          },
+        },
+        child: {
+          props: {
+            columns: { xs: 3, sm: 6, lg: 12 },
+            justifyContent: { xs: 'center', md: 'start', xl: 'end' },
+            alignItems: { xs: 'end', sm: 'center', xl: 'start' },
+            offset: { md: 4, xl: 10 },
+          },
+          expected: {
+            xs: {
+              width: `${(100 / 12) * 3}%`,
+              'justify-content': 'center',
+              'align-items': 'end',
+            },
+            sm: {
+              padding: `${theme.spacing(2)}px ${theme.spacing(2)}px`,
+              width: `${(100 / 12) * 6}%`,
+              'align-items': 'center',
+            },
+            md: {
+              'justify-content': 'start',
+              'margin-left': 'calc(100% * 4 / 12)',
+            },
+            lg: {
+              padding: `${theme.spacing(6)}px ${theme.spacing(6)}px`,
+              width: `${(100 / 12) * 12}%`,
+            },
+            xl: {
+              'justify-content': 'end',
+              'align-items': 'start',
+              'margin-left': 'calc(100% * 10 / 12)',
+            },
+          },
+        },
+      },
+      {
+        container: {
+          props: {
+            rowSpacing: { xs: 3, md: 4, lg: 5 },
+            columnSpacing: { xs: 1, sm: 4, lg: 6 },
+          },
+          expected: {
+            xs: {},
+            sm: {},
+            md: {},
+            xl: {},
+            lg: {},
+          },
+        },
+        child: {
+          props: {},
+          expected: {
+            xs: {
+              padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,
+            },
+            sm: {
+              padding: `0px ${theme.spacing(4)}px`,
+            },
+            md: {
+              padding: `${theme.spacing(4)}px 0px`,
+            },
+            xl: {},
+            lg: {
+              padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`,
+            },
+          },
+        },
+      },
+    ];
+
+    const renderGrid = (
+      container: Partial<IGridProps>,
+      child: Partial<IGridProps>
+    ) =>
+      renderWithTheme(
+        <Grid container {...container}>
+          <Grid {...child} />
+        </Grid>
+      );
+
+    testCases.forEach(({ container, child }) => {
+      const parentElement = renderGrid(container.props, child.props);
+      const childElement = parentElement.firstChild;
+
+      Object.entries(container.expected).forEach(
+        ([breakpoint, styleObject]) => {
+          Object.entries(styleObject).forEach(([styleKey, style]) => {
+            expect(parentElement).toHaveStyleRule(styleKey, style, {
+              media: theme.breakpoint.up(breakpoint as BreakpointKey),
+            });
+          });
+        }
+      );
+
+      Object.entries(child.expected).forEach(([breakpoint, styleObject]) => {
+        Object.entries(styleObject).forEach(([styleKey, style]) => {
+          expect(childElement).toHaveStyleRule(styleKey, style, {
+            media: theme.breakpoint.up(breakpoint as BreakpointKey),
+          });
+        });
+      });
+    });
   });
 });
