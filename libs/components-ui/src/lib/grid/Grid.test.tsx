@@ -63,6 +63,6 @@ describe('Grid', () => {
       return 0;
     }, 0);
 
-    expect(totalWidthh / 2).toBe(100);
+    expect(totalWidthh).toBe(200);
   });
 });
