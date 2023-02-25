@@ -131,7 +131,19 @@ export const handleBreakpoints = <T>(
   const css = mappedStyles.css<T>(callbackStyleValue);
   const breakpointCSS = mappedStyles.breakpointCSS<T>(callbackStyleValue);
 
-  return { ...css, ...breakpointCSS };
+  // Make sure the media queries are in cascading order
+  const sortedMediaQuery = Object.fromEntries(
+    Object.entries(breakpointCSS).sort(([a], [b]) => {
+      const regex = /(\d+)/;
+      const aMatch = a.match(regex);
+      const bMatch = b.match(regex);
+      // sort by the numeric part of the media query
+      if (aMatch && bMatch) return parseInt(aMatch[1]) - parseInt(bMatch[1]);
+      return -1;
+    })
+  );
+
+  return { ...css, ...sortedMediaQuery };
 };
 
 /**

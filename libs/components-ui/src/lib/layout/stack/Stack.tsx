@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { handleBreakpoints, Spacing, WithBreakpoint } from '@trade-invest/theme';
+import {
+  handleBreakpoints,
+  Spacing,
+  WithBreakpoint,
+} from '@trade-invest/theme';
 import React, { HTMLAttributes, ReactElement } from 'react';
 import type * as CSS from 'csstype';
 
@@ -11,15 +15,21 @@ interface IStackProps extends HTMLAttributes<HTMLElement> {
   /**
    * Defines the flex-direction.
    */
-  direction?: CSS.Property.FlexDirection | WithBreakpoint<CSS.Property.FlexDirection>;
+  direction?:
+    | CSS.Property.FlexDirection
+    | WithBreakpoint<CSS.Property.FlexDirection>;
   /**
    * Defines the justify-content
    */
-  justifyContent?: CSS.Property.JustifyContent | WithBreakpoint<CSS.Property.JustifyContent>;
+  justifyContent?:
+    | CSS.Property.JustifyContent
+    | WithBreakpoint<CSS.Property.JustifyContent>;
   /**
    * Defines the align-items
    */
-  alignItems?: CSS.Property.AlignItems | WithBreakpoint<CSS.Property.AlignItems>;
+  alignItems?:
+    | CSS.Property.AlignItems
+    | WithBreakpoint<CSS.Property.AlignItems>;
   /**
    * Add an element between each child.
    */
@@ -53,23 +63,26 @@ const joinChildren = (children: React.ReactNode, separator: ReactElement) => {
 };
 
 const StackRoot = styled.div<{ ownerState: IStackProps }>(
-  ({ theme, ownerState }) => ({
+  ({
+    theme,
+    ownerState: { spacing, direction, justifyContent, alignItems },
+  }) => ({
     display: 'flex',
-    ...(ownerState.spacing && {
-      gap: theme.spacing(ownerState.spacing),
+    ...(spacing && {
+      gap: theme.spacing(spacing),
     }),
-    ...(ownerState.direction && {
-      ...handleBreakpoints(ownerState.direction, (propValue) => ({
-        flexDirection: propValue,
+    ...(direction && {
+      ...handleBreakpoints(theme, { direction }, ({ direction }) => ({
+        flexDirection: direction,
       })),
     }),
-    ...(ownerState.justifyContent && {
-      ...handleBreakpoints(ownerState.justifyContent, (propValue) => ({
-        justifyContent: propValue,
+    ...(justifyContent && {
+      ...handleBreakpoints(theme, { justifyContent }, ({ justifyContent }) => ({
+        justifyContent: justifyContent,
       })),
-      ...(ownerState.alignItems && {
-        ...handleBreakpoints(ownerState.alignItems, (propValue) => ({
-          alignItems: propValue,
+      ...(alignItems && {
+        ...handleBreakpoints(theme, { alignItems }, ({ alignItems }) => ({
+          alignItems: alignItems,
         })),
       }),
     }),
@@ -77,9 +90,10 @@ const StackRoot = styled.div<{ ownerState: IStackProps }>(
 );
 
 /**
+ * TODO
  The Typography component makes it easy to apply a default set of font weights and sizes in your application.
 **/
-export function Stack(props: IStackProps) {
+function Stack(props: IStackProps) {
   const {
     component = 'div',
     direction = 'column',

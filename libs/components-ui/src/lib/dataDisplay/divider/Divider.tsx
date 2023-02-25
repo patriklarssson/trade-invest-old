@@ -113,7 +113,7 @@ const DividerWrapper = styled.span<{ ownerState: IDividerProps }>(
   })
 );
 
-export function Divider(props: IDividerProps) {
+function Divider(props: IDividerProps) {
   const {
     children,
     component = children ? 'div' : 'hr',

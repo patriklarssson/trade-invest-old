@@ -29,7 +29,7 @@ const ContainerRoot = styled.div<{ ownerState: IContainerProps }>(
   })
 );
 
-export function Container(props: IContainerProps) {
+function Container(props: IContainerProps) {
   const {
     component = 'div',
     disableGutters = false,

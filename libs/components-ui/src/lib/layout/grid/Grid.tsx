@@ -7,8 +7,8 @@ import {
 import { useContext } from 'react';
 import type * as CSS from 'csstype';
 import React from 'react';
-import { compose } from '../utilities';
-import { withDisplay } from '../higher-order-components';
+import { compose } from '../../utilities';
+import { withDisplay } from '../../higher-order-components';
 import { IGridProps } from './GridProps';
 
 const maxGridColumns = 12;
@@ -88,12 +88,14 @@ const GridRoot = styled.div<{
           alignItems,
           offset,
         }) => {
-          const calculatedPadding = `${
-            theme.spacing(rowSpacing ?? spacing) ?? defaultSpacing
-          }px ${theme.spacing(columnSpacing ?? spacing) ?? defaultSpacing}px`;
-          const rootContainerMargin = `-${
-            theme.spacing(rowSpacing ?? spacing) ?? defaultSpacing
-          }px -${theme.spacing(columnSpacing ?? spacing) ?? defaultSpacing}px`;
+          // const calculatedPadding = `${
+          //   theme.spacing(rowSpacing ?? spacing) ?? defaultSpacing
+          // }px ${theme.spacing(columnSpacing ?? spacing) ?? defaultSpacing}px`;
+
+          // const rootContainerMargin = `-${
+          //   theme.spacing(rowSpacing ?? spacing) ?? defaultSpacing
+          // }px -${theme.spacing(columnSpacing ?? spacing) ?? defaultSpacing}px`;
+
           const nestedContainerWidth = `calc(100% * ${columns} / ${maxGridColumns} + ${
             (theme.spacing(columnSpacing ?? spacing) ??
               Number(defaultSpacing)) * 2
@@ -106,29 +108,45 @@ const GridRoot = styled.div<{
             ...(container && {
               flexDirection: direction,
               flexWrap: wrap,
-              margin: rootContainerMargin,
+              ...(spacing && {
+                margin: `-${theme.spacing(spacing)}px`,
+              }),
+              ...(rowSpacing && {
+                marginTop: `-${theme.spacing(rowSpacing)}px`,
+                marginBottom: `-${theme.spacing(rowSpacing)}px`,
+              }),
+              ...(columnSpacing && {
+                marginRight: `-${theme.spacing(columnSpacing)}px`,
+                marginLeft: `-${theme.spacing(columnSpacing)}px`,
+              }),
             }),
 
             // Nested container
             ...(isNestedContainer && {
               width: nestedContainerWidth,
-              padding: calculatedPadding,
+            }),
+
+            // Handle spacing
+            ...((!container || isNestedContainer) && {
+              ...(spacing && {
+                padding: `${theme.spacing(spacing)}px`,
+              }),
+              ...(rowSpacing && {
+                paddingTop: `${theme.spacing(rowSpacing)}px`,
+                paddingBottom: `${theme.spacing(rowSpacing)}px`,
+              }),
+              ...(columnSpacing && {
+                paddingRight: `${theme.spacing(columnSpacing)}px`,
+                paddingLeft: `${theme.spacing(columnSpacing)}px`,
+              }),
             }),
 
             // Manuall columns (not auto)
             ...(!auto && {
-              ...(!container && {
-                padding: calculatedPadding,
-              }),
               ...(columns &&
                 !container && {
                   width: `${(100 * columns) / maxGridColumns}%`,
                 }),
-            }),
-
-            // auto
-            ...(auto && {
-              padding: calculatedPadding,
             }),
 
             // offset
@@ -155,7 +173,8 @@ const GridContext = React.createContext<{
   hasContainer: boolean;
 }>({ hasContainer: false });
 
-export function Grid(props: Partial<IGridProps>) {
+// export function Grid(props: Partial<IGridProps>) {
+function Grid(props: Partial<IGridProps>) {
   const spacingContext = useContext(GridContext);
 
   const {

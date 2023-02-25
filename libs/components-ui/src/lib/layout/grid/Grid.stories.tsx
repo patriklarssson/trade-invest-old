@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { WithBreakpoint } from '@trade-invest/theme';
-import Paper from '../paper/Paper';
+import Paper from '../../surfaces/paper/Paper';
 import Grid from './Grid';
+import { IGridProps } from './GridProps';
+import type * as CSS from 'csstype';
 // https://storybook.js.org/docs/react/essentials/controls
 export default {
   component: Grid,
-  title: 'Grid',
+  title: 'Layout/Grid',
   parameters: {
     controls: {
       exclude: ['container'],
@@ -36,6 +38,25 @@ const Template: ComponentStory<typeof Grid> = (args) => {
         <Item>Column=5</Item>
       </Grid>
       <Grid columns={7}>
+        <Item>Column=7</Item>
+      </Grid>
+    </Grid>
+  );
+};
+
+const TemplateChild: ComponentStory<typeof Grid> = (args) => {
+  return (
+    <Grid container spacing={2}>
+      <Grid {...args} columns={8}>
+        <Item>Column=8</Item>
+      </Grid>
+      <Grid {...args} columns={4}>
+        <Item>Column=4</Item>
+      </Grid>
+      <Grid {...args} columns={5}>
+        <Item>Column=5</Item>
+      </Grid>
+      <Grid {...args} columns={7}>
         <Item>Column=7</Item>
       </Grid>
     </Grid>
@@ -200,31 +221,34 @@ export const Offset = () => {
   );
 };
 
-export const AlignItems = () => {
-  return (
-    <Grid container spacing={2}>
-      <Grid
-        columns={6}
-        display="flex"
-        justifyContent={'center'}
-        alignItems={'center'}
-      >
-        <Item>Item</Item>
-        <Item>Item</Item>
-        <Item>Item</Item>
-      </Grid>
-      <Grid
-        columns={6}
-        display="flex"
-        justifyContent={'space-between'}
-        alignItems={'end'}
-      >
-        <Item>Item</Item>
-        <Item>Item</Item>
-        <Item>Item</Item>
-      </Grid>
-    </Grid>
-  );
+export const AlignItems = TemplateChild.bind({})
+
+AlignItems.args = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  style: {
+    backgroundColor: "lightgray",
+    height: "150px",
+    border: "1px solid black"
+  }
+}
+
+AlignItems.argTypes = {
+  justifyContent: {
+    options: ["center", "end", "start", "space-between", "space-around"],
+    control: { type: 'select' },
+  },
+  alignItems: {
+    options: ["center", "end", "start"],
+    control: { type: 'select' },
+  },
+};
+
+AlignItems.parameters = {
+  controls: {
+    exclude: ['display'],
+  },
 };
 
 const AlterChildTemplate: ComponentStory<any> = ({
@@ -320,7 +344,6 @@ export const MultipleBreakpoints = AlterChildTemplate.bind({});
 
 MultipleBreakpoints.args = {
   columns: { xs: 12, sm: 10, md: 8, lg: 6, xl: 4 },
-  spacing: { xs: 2, sm: 3, md: 4, lg: 5, xl: 6 },
   direction: { xs: 'row', lg: 'column' },
   justifyContent: {
     xs: 'left',

@@ -5,7 +5,7 @@ import {
   WithBreakpoint,
 } from '@trade-invest/theme';
 import Grid from './Grid';
-import { renderWithTheme, isElement } from '../test-utilities';
+import { renderWithTheme, isElement } from '../../test-utilities';
 import { IGridProps } from './GridProps';
 import { screen } from '@testing-library/react';
 jest.mock('@trade-invest/theme');
@@ -30,10 +30,7 @@ describe('Grid', () => {
     expect(element).toHaveStyleRule('display', 'flex');
     expect(element).toHaveStyleRule('flex-direction', 'row');
     expect(element).toHaveStyleRule('flex-wrap', 'wrap');
-    expect(element).toHaveStyleRule(
-      'margin',
-      `-${theme.spacing(2)}px -${theme.spacing(2)}px`
-    );
+    expect(element).toHaveStyleRule('margin', `-${theme.spacing(2)}px`);
 
     element.childNodes.forEach((child) => {
       expect(child).toHaveStyleRule('min-width', '0');
@@ -41,10 +38,7 @@ describe('Grid', () => {
       expect(child).toHaveStyleRule('flex-grow', '0');
       expect(child).toHaveStyleRule('flex-basis', 'auto');
       expect(child).toHaveStyleRule('width', '100%');
-      expect(child).toHaveStyleRule(
-        'padding',
-        `${theme.spacing(2)}px ${theme.spacing(2)}px`
-      );
+      expect(child).toHaveStyleRule('padding', `${theme.spacing(2)}px`);
     });
   });
 
@@ -97,10 +91,7 @@ describe('Grid', () => {
     );
 
     element.childNodes.forEach((child) => {
-      expect(child).toHaveStyleRule(
-        'padding',
-        `${theme.spacing(2)}px ${theme.spacing(2)}px`
-      );
+      expect(child).toHaveStyleRule('padding', `${theme.spacing(2)}px`);
     });
   });
   test('should add row spacing to children', () => {
@@ -111,7 +102,8 @@ describe('Grid', () => {
       </Grid>
     );
     element.childNodes.forEach((child) => {
-      expect(child).toHaveStyleRule('padding', `${theme.spacing(2)}px 0px`);
+      expect(child).toHaveStyleRule('padding-top', `${theme.spacing(2)}px`);
+      expect(child).toHaveStyleRule('padding-bottom', `${theme.spacing(2)}px`);
     });
   });
 
@@ -123,38 +115,8 @@ describe('Grid', () => {
       </Grid>
     );
     element.childNodes.forEach((child) => {
-      expect(child).toHaveStyleRule('padding', `0px ${theme.spacing(2)}px`);
-    });
-  });
-
-  test('row and column spacing should overwrite spacing', () => {
-    const testCases: TestCaseGrid[] = [
-      {
-        props: { container: true, spacing: 2, columnSpacing: 1 },
-        expected: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
-      },
-      {
-        props: { container: true, spacing: 2, rowSpacing: 1 },
-        expected: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-      },
-      {
-        props: { container: true, spacing: 2, rowSpacing: 1, columnSpacing: 1 },
-        expected: `${theme.spacing(1)}px ${theme.spacing(1)}px`,
-      },
-    ];
-
-    const renderGrid = (props: Partial<IGridProps>) =>
-      renderWithTheme(
-        <Grid {...props}>
-          <Grid />
-          <Grid />
-        </Grid>
-      );
-
-    testCases.forEach(({ props, expected }) => {
-      renderGrid(props).childNodes.forEach((child) => {
-        expect(child).toHaveStyleRule('padding', expected);
-      });
+      expect(child).toHaveStyleRule('padding-right', `${theme.spacing(2)}px`);
+      expect(child).toHaveStyleRule('padding-left', `${theme.spacing(2)}px`);
     });
   });
 
@@ -308,14 +270,8 @@ describe('Grid', () => {
     expect(nestedContainer).toHaveStyleRule('display', 'flex');
     expect(nestedContainer).toHaveStyleRule('flex-direction', 'row');
     expect(nestedContainer).toHaveStyleRule('flex-wrap', 'wrap');
-    expect(nestedContainer).toHaveStyleRule(
-      'margin',
-      `-${theme.spacing(2)}px -${theme.spacing(2)}px`
-    );
-    expect(nestedContainer).toHaveStyleRule(
-      'padding',
-      `${theme.spacing(2)}px ${theme.spacing(2)}px`
-    );
+    expect(nestedContainer).toHaveStyleRule('margin', `-${theme.spacing(2)}px`);
+    expect(nestedContainer).toHaveStyleRule('padding', `${theme.spacing(2)}px`);
     expect(nestedContainer).toHaveStyleRule(
       'width',
       `calc(100% * 6 / 12 + ${(theme.spacing(2) ?? 0) * 2}px)`
@@ -355,7 +311,7 @@ describe('Grid', () => {
             columns: { xs: 3, sm: 6, lg: 12 },
             justifyContent: { xs: 'center', md: 'start', xl: 'end' },
             alignItems: { xs: 'end', sm: 'center', xl: 'start' },
-            offset: { md: 4, xl: 10 },
+            offset: { sm: 'auto', md: 4, xl: 10 },
           },
           expected: {
             xs: {
@@ -364,16 +320,17 @@ describe('Grid', () => {
               'align-items': 'end',
             },
             sm: {
-              padding: `${theme.spacing(2)}px ${theme.spacing(2)}px`,
+              padding: `${theme.spacing(2)}px`,
               width: `${(100 / 12) * 6}%`,
               'align-items': 'center',
+              'margin-left': 'auto',
             },
             md: {
               'justify-content': 'start',
               'margin-left': 'calc(100% * 4 / 12)',
             },
             lg: {
-              padding: `${theme.spacing(6)}px ${theme.spacing(6)}px`,
+              padding: `${theme.spacing(6)}px`,
               width: `${(100 / 12) * 12}%`,
             },
             xl: {
@@ -389,30 +346,62 @@ describe('Grid', () => {
           props: {
             rowSpacing: { xs: 3, md: 4, lg: 5 },
             columnSpacing: { xs: 1, sm: 4, lg: 6 },
+            wrap: { xs: 'wrap', md: 'nowrap' },
+            direction: { sm: 'column', xl: 'row' },
           },
           expected: {
-            xs: {},
-            sm: {},
-            md: {},
-            xl: {},
+            xs: {
+              'flex-wrap': 'wrap',
+            },
+            sm: {
+              'flex-direction': 'column',
+            },
+            md: {
+              'flex-wrap': 'nowrap',
+            },
             lg: {},
+            xl: {
+              'flex-direction': 'row',
+            },
           },
         },
         child: {
-          props: {},
+          props: {
+            columns: { sm: 6, xl: 12 },
+            justifyContent: { xs: 'center', md: 'start' },
+            alignItems: { sm: 'center', xl: 'start' },
+            offset: { lg: 4, xl: 'auto' },
+          },
           expected: {
             xs: {
-              padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,
+              'padding-top': `${theme.spacing(3)}px`,
+              'padding-bottom': `${theme.spacing(3)}px`,
+              'padding-right': `${theme.spacing(1)}px`,
+              'padding-left': `${theme.spacing(1)}px`,
+              'justify-content': 'center',
             },
             sm: {
-              padding: `0px ${theme.spacing(4)}px`,
+              'padding-right': `${theme.spacing(4)}px`,
+              'padding-left': `${theme.spacing(4)}px`,
+              width: `${(100 / 12) * 6}%`,
+              'align-items': 'center',
             },
             md: {
-              padding: `${theme.spacing(4)}px 0px`,
+              'padding-top': `${theme.spacing(4)}px`,
+              'padding-bottom': `${theme.spacing(4)}px`,
+              'justify-content': 'start',
             },
-            xl: {},
             lg: {
-              padding: `${theme.spacing(5)}px ${theme.spacing(6)}px`,
+              'padding-top': `${theme.spacing(5)}px`,
+              'padding-bottom': `${theme.spacing(5)}px`,
+              'padding-right': `${theme.spacing(6)}px`,
+              'padding-left': `${theme.spacing(6)}px`,
+              'margin-left': 'calc(100% * 4 / 12)',
+            },
+            xl: {
+              width: `${(100 / 12) * 12}%`,
+              'align-items': 'start',
+              'margin-left': 'auto',
             },
           },
         },
@@ -452,4 +441,77 @@ describe('Grid', () => {
       });
     });
   });
+
+  // test('should create grid with breakpoint props and without', () => {
+  //   const testCases: {
+  //     container: TestCaseGrid<WithBreakpoint<object>>;
+  //     child: TestCaseGrid<WithBreakpoint<object> & { standard: object }>;
+  //   }[] = [
+  //     {
+  //       container: {
+  //         props: {
+  //           spacing: 3,
+  //           columnSpacing: { sm: 1 },
+  //           rowSpacing: { md: 2 },
+  //         },
+  //         expected: {
+  //           sm: {},
+  //           md: {},
+  //           lg: {},
+  //           xl: {},
+  //         },
+  //       },
+  //       child: {
+  //         props: {},
+  //         expected: {
+  //           standard: {
+  //             padding: `${theme.spacing(3)}px ${theme.spacing(3)}px`,
+  //           },
+  //           sm: {
+  //             padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,
+  //           },
+  //           md: {
+  //             padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   ];
+
+  //   const renderGrid = (
+  //     container: Partial<IGridProps>,
+  //     child: Partial<IGridProps>
+  //   ) =>
+  //     renderWithTheme(
+  //       <Grid container {...container}>
+  //         <Grid {...child} />
+  //       </Grid>
+  //     );
+
+  //   testCases.forEach(({ container, child }) => {
+  //     const parentElement = renderGrid(container.props, child.props);
+  //     const childElement = parentElement.firstChild;
+
+  //     Object.entries(container.expected).forEach(
+  //       ([breakpoint, styleObject]) => {
+  //         Object.entries(styleObject).forEach(([styleKey, style]) => {
+  //           expect(parentElement).toHaveStyleRule(styleKey, style, {
+  //             media: theme.breakpoint.up(breakpoint as BreakpointKey),
+  //           });
+  //         });
+  //       }
+  //     );
+
+  //     Object.entries(child.expected).forEach(([breakpoint, styleObject]) => {
+  //       Object.entries(styleObject).forEach(([styleKey, style]) => {
+  //         if (breakpoint === 'standard')
+  //           expect(childElement).toHaveStyleRule(styleKey, style);
+  //         else
+  //           expect(childElement).toHaveStyleRule(styleKey, style, {
+  //             media: theme.breakpoint.up(breakpoint as BreakpointKey),
+  //           });
+  //       });
+  //     });
+  //   });
+  // });
 });

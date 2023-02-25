@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Stack from '../stack/Stack';
+import Stack from '../../layout/stack/Stack';
 import { Paper } from './Paper';
 
 export default {

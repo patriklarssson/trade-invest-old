@@ -1,16 +1,9 @@
 import styled from '@emotion/styled';
 import type * as CSS from 'csstype';
 import React, { HTMLAttributes } from 'react';
-import {
-  withBorder,
-  withBoxShadow,
-  withColor,
-  withDisplay,
-  withFlexBox,
-  withMargin,
-  withPadding,
-} from '../higher-order-components';
-import { compose } from '../utilities';
+import { withPadding, withMargin, withBorder, withBoxShadow, withDisplay, withColor, withFlexBox } from '../../higher-order-components';
+import { compose } from '../../utilities';
+
 
 type VariantType =
   | 'body1'

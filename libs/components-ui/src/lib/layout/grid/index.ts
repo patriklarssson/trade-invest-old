@@ -1,2 +1,2 @@
-export { Grid } from './Grid';
+export { default } from './Grid';
 export { IGridProps } from './GridProps';

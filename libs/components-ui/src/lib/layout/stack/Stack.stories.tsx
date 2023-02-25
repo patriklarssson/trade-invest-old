@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Typography from '../typography/Typography';
+import Typography from '../../typography/Typography';
 import { Stack } from './Stack';
-import { Divider } from '../divider/Divider';
+import { Divider } from '../../dataDisplay/divider/Divider';
 
 export default {
   component: Stack,

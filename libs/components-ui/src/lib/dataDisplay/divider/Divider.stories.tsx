@@ -1,10 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Typography from '../typography/Typography';
-import { Divider } from './Divider';
+import Typography from '../typography';
+import Divider from './Divider';
+
 
 export default {
   component: Divider,
-  title: 'Divider',
+  title: 'Layout/Divider',
 } as ComponentMeta<typeof Divider>;
 
 export const ListDivider = () => {
