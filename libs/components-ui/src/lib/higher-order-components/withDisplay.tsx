@@ -14,6 +14,7 @@ Higher-Order Component that adds padding to a wrapped component.
 @returns {function(T & Partial<IDisplayProps>): JSX.Element} - A higher-order component that adds padding to a wrapped component.
  */
 const withDisplay = <T,>(WrappedComponent: ComponentType<T>) => {
+// const withDisplay = <T,>(WrappedComponent: ComponentType<T>) => {
   const DisplayHoc = styled(WrappedComponent)<Partial<IDisplayProps> & T>(
     ({ theme, display, hidden }) => ({
       ...handleBreakpoints(theme, { display }, ({ display }) => ({ display })),

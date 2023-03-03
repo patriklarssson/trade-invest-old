@@ -16,6 +16,7 @@ const ContainerRoot = styled.div<{ ownerState: IContainerProps }>(
     marginLeft: 'auto',
     marginRight: 'auto',
     display: 'block',
+    boxSizing: "border-box",
 
     ...(ownerState.maxWidth && {
       maxWidth: values[ownerState.maxWidth],

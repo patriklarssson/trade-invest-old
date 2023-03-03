@@ -7,8 +7,7 @@ import {
 import { useContext } from 'react';
 import type * as CSS from 'csstype';
 import React from 'react';
-import { compose } from '../../utilities';
-import { withDisplay } from '../../higher-order-components';
+import { withDisplay, withPadding } from '../../higher-order-components';
 import { IGridProps } from './GridProps';
 
 const maxGridColumns = 12;
@@ -225,4 +224,4 @@ function Grid(props: Partial<IGridProps>) {
   );
 }
 
-export default compose(withDisplay)(Grid);
+export default withDisplay(Grid);

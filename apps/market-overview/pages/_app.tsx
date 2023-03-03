@@ -6,7 +6,7 @@ import { theme } from '@trade-invest/theme';
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme[0]}>
-      <Global styles={{ body: { margin: 0 } }} />
+      <Global styles={{ body: { margin: 0, backgroundColor: '#f6f6f6' } }} />
       <Head>
         <title>Welcome to market-overview!</title>
       </Head>

@@ -1,155 +1,131 @@
 export interface Security {
-  priceThreeMonthsAgo: number;
-  priceOneWeekAgo: number;
-  priceOneMonthAgo: number;
-  priceSixMonthsAgo: number;
-  priceAtStartOfYear: number;
-  priceOneYearAgo: number;
-  priceThreeYearsAgo: number;
-  priceFiveYearsAgo: number;
-  marketPlace: string;
-  marketList: string;
-  quoteUpdated: string;
-  hasInvestmentFees: boolean;
-  morningStarFactSheetUrl: string;
-  currency: Currency;
-  isin: string;
-  changePercent: number;
-  change: number;
-  highestPrice: number;
-  lowestPrice: number;
-  lastPrice: number;
-  lastPriceUpdated: LastPriceUpdated;
-  totalVolumeTraded: number;
-  totalValueTraded: number;
-  tradable: boolean;
-  shortSellable: boolean;
-  tickerSymbol: string;
-  loanFactor: number;
-  flagCode: string;
-  name: string;
-  id: string;
-  country: string;
-  keyRatios: KeyRatios;
-  numberOfOwners: number;
-  superLoan: boolean;
-  numberOfPriceAlerts: number;
-  pushPermitted: boolean;
-  dividends: Dividend[];
-  relatedStocks: RelatedStock[];
-  company: Company;
-  orderDepthLevels: any[];
-  marketMakerExpected: boolean;
-  orderDepthReceivedTime: string;
-  latestTrades: LatestTrade[];
-  marketTrades: boolean;
-  positions: Position[];
-  positionsTotalValue: number;
-  annualMeetings: AnnualMeeting[];
-  companyReports: CompanyReport[];
-  brokerTradeSummary: BrokerTradeSummary;
-  companyOwners: CompanyOwners;
+  orderbookId:             string;
+  name:                    string;
+  isin:                    string;
+  instrumentId:            string;
+  sectors:                 Sector[];
+  tradable:                string;
+  listing:                 Listing;
+  historicalClosingPrices: HistoricalClosingPrices;
+  keyIndicators:           KeyIndicators;
+  quote:                   Quote;
+  type:                    string;
+  news:                    News[];
+  forum:                   Forum[];
 }
 
-interface AnnualMeeting {
-  eventDate: Date;
-  extra: boolean;
+export interface Forum {
+  author:    string;
+  title:     string;
+  content:   string;
+  likes:     number;
+  replies:   number;
+  timestamp: number;
+  url:       string;
 }
 
-interface BrokerTradeSummary {
-  orderbookId: string;
-  items: Item[];
+export interface HistoricalClosingPrices {
+  oneDay:      number;
+  oneWeek:     number;
+  oneMonth:    number;
+  threeMonths: number;
+  startOfYear: number;
+  oneYear:     number;
+  threeYears:  number;
+  fiveYears:   number;
+  start:       number;
+  startDate:   Date;
 }
 
-interface Item {
-  netBuyVolume: number;
-  sellVolume: number;
-  buyVolume: number;
-  brokerCode: string;
+export interface KeyIndicators {
+  numberOfOwners:        number;
+  reportDate:            Date;
+  directYield:           number;
+  volatility:            number;
+  beta:                  number;
+  priceEarningsRatio:    number;
+  priceSalesRatio:       number;
+  returnOnEquity:        number;
+  returnOnTotalAssets:   number;
+  equityRatio:           number;
+  capitalTurnover:       number;
+  operatingProfitMargin: number;
+  netMargin:             number;
+  marketCapital:         EarningsPerShare;
+  equityPerShare:        EarningsPerShare;
+  turnoverPerShare:      EarningsPerShare;
+  earningsPerShare:      EarningsPerShare;
+  dividend:              Dividend;
+  dividendsPerYear:      number;
+  nextReport:            Report;
+  previousReport:        Report;
 }
 
-interface Company {
-  sector: string;
-  stocks: Stock[];
-  description: string;
-  totalNumberOfShares: number;
-  chairman: string;
-  marketCapital: number;
-  marketCapitalCurrency: Currency;
-  name: string;
-  id: string;
-  CEO: string;
+export interface Dividend {
+  exDate:       Date;
+  paymentDate:  Date;
+  amount:       number;
+  currencyCode: string;
+  exDateStatus: string;
 }
 
-enum Currency {
-  Sek = 'SEK',
+export interface EarningsPerShare {
+  value:    number;
+  currency: string;
 }
 
-interface Stock {
-  totalNumberOfShares: number;
-  name: string;
-}
-
-interface CompanyOwners {
-  list: List[];
-  updated: Date;
-}
-
-interface List {
-  name: string;
-  capital: number;
-  votes: number;
-}
-
-interface CompanyReport {
-  eventDate: Date;
+export interface Report {
+  date:       Date;
   reportType: string;
 }
 
-interface Dividend {
-  exDate: Date;
-  paymentDate: Date;
-  amountPerShare: number;
-  currency: Currency;
+export interface Listing {
+  shortName:             string;
+  tickerSymbol:          string;
+  countryCode:           string;
+  currency:              string;
+  marketPlaceCode:       string;
+  marketPlaceName:       string;
+  marketListName:        string;
+  tickSizeListId:        string;
+  marketTradesAvailable: boolean;
 }
 
-interface KeyRatios {
-  volatility: number;
-  priceEarningsRatio: number;
-  directYield: number;
+export interface News {
+  timePublishedMillis: number;
+  timePublished:       Date;
+  headline:            string;
+  vignette:            string;
+  articleType:         ArticleType;
+  newsSource:          string;
+  fullArticleLink:     string;
+  intro:               string;
+  externalLink:        boolean;
 }
 
-enum LastPriceUpdated {
-  The20221202T1724550000100 = '2022-12-02T17:24:55.000+0100',
-  The20221202T1729330000100 = '2022-12-02T17:29:33.000+0100',
+export enum ArticleType {
+  Analys = "Analys",
+  Kommentar = "Kommentar",
+  Nyhet = "Nyhet",
+  Pressrelease = "Pressrelease",
+  Telegram = "Telegram",
+  Övrigt = "Övrigt",
 }
 
-interface LatestTrade {
-  buyer?: string;
-  seller?: string;
-  matchedOnMarket: boolean;
-  cancelled: boolean;
-  volume: number;
-  price: number;
-  dealTime: LastPriceUpdated;
+export interface Quote {
+  last:                       number;
+  highest:                    number;
+  lowest:                     number;
+  change:                     number;
+  changePercent:              number;
+  timeOfLast:                 number;
+  totalValueTraded:           number;
+  totalVolumeTraded:          number;
+  updated:                    number;
+  volumeWeightedAveragePrice: number;
 }
 
-interface Position {
-  accountName: string;
-  accountType: string;
-  accountId: string;
-  volume: number;
-  averageAcquiredPrice: number;
-  profitPercent: number;
-  acquiredValue: number;
-  profit: number;
-  value: number;
-}
-
-interface RelatedStock {
-  lastPrice: number;
-  flagCode: string;
-  priceOneYearAgo: number;
-  name: string;
-  id: string;
+export interface Sector {
+  sectorId:   string;
+  sectorName: string;
 }
