@@ -14,8 +14,7 @@ const nextConfig = {
   },
   compiler: {
     emotion: true
-  },
-  transpilePackages: ["@trade-invest/components-ui"]
+  }
 };
 
 
