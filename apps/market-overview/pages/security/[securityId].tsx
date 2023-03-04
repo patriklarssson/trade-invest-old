@@ -120,6 +120,7 @@ export default function SecurityDetailPage({
 
 // This gets called on every request
 export async function getServerSideProps({ params }) {
+
   // Fetch data from external API
   // const res = await fetch(
   //   `http://localhost:3333/security/${params.securityId}`
