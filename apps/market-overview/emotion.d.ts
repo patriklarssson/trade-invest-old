@@ -1,7 +1,7 @@
 import '@emotion/react';
-import { ThemeMy } from '@trade-invest/theme';
+import { CustomTheme } from '@trade-invest/theme';
 
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  export interface Theme extends ThemeMy {}
+  export interface Theme extends CustomTheme {}
 }

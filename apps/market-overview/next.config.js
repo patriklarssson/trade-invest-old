@@ -12,6 +12,12 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  compiler: {
+    emotion: true
+  },
+  transpilePackages: ["@trade-invest/components-ui"]
 };
+
+
 
 module.exports = withNx(nextConfig);

@@ -1,1 +1,1 @@
-export { IntRange } from './range';
+export type { IntRange } from './range';
